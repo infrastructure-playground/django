@@ -1,0 +1,10 @@
+FROM python:3
+
+WORKDIR /usr/src/app
+EXPOSE 8000
+RUN apt-get update && \
+    apt-get install vim -y && \
+    pip install --upgrade pip && \
+    pip install django gunicorn gevent psycopg2-binary djangorestframework markdown django-filter django-cors-headers
+
+CMD ping google.com

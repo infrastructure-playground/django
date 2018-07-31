@@ -1,0 +1,30 @@
+#migration files
+*/migrations/*
+!*/migrations/__init__.py
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# celery beat schedule file
+celerybeat-schedule
+
+celerybeat.pid
+celeryd.pid
+
+# git
+.git
+
+# Editor
+*.DS_Store
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.class
+db.sqlite3
+
+# media
+media/*
+
+# static
+static/*
