@@ -8,3 +8,6 @@ gunicorn==19.9.0
 Markdown==2.6.11
 psycopg2-binary==2.7.5
 pytz==2018.5
+djangorestframework-jwt==1.11.0
+coreapi==2.3.3
+pygments==2.2.0
