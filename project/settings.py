@@ -39,6 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+START_APPS = [
+    'authentication',
+]
+INSTALLED_APPS += START_APPS
+
+THIRD_PARTY_APPS = [
+    'rest_framework',
+]
+INSTALLED_APPS += THIRD_PARTY_APPS
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -112,6 +122,17 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
 
 
 # Static files (CSS, JavaScript, Images)
