@@ -135,6 +135,8 @@ REST_FRAMEWORK = {
 }
 
 
+AUTH_USER_MODEL = 'authentication.Account'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
