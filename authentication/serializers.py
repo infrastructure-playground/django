@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 
-from . models import Account
+# from . models import Account
+from django.contrib.auth.models import User
 # from core.functions import serializer_empty_cleaner
 
 
@@ -14,8 +15,8 @@ class AccountSerializer(serializers.ModelSerializer):
     # TODO: configure user update especially with the password
 
     class Meta:
-        model = Account
-        exclude = ('is_admin', 'created_at', 'updated_at')
+        model = User
+        fields = '__all__'
         # extra kwargs is declared to include both fields without putting it
         # to Meta fields attribute
         extra_kwargs = {
@@ -27,14 +28,14 @@ class AccountSerializer(serializers.ModelSerializer):
         """
         @brief      account registration logic.
         """
-        try:
-            account = Account.objects.create_user(**validated_data)
-            pre_payload = api_settings.JWT_PAYLOAD_HANDLER(account)
-            token = api_settings.JWT_ENCODE_HANDLER(pre_payload)
-            account.token = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER(token)
-        except ValueError as e:
-            raise serializers.ValidationError({'error': e})
-        # TODO do oauth token creation
+        if validated_data['password'] != validated_data['confirm_password']:
+            raise serializers.ValidationError({'error': 'Passwords must match'})
+        else:
+            del validated_data['confirm_password']
+        account = User.objects.create_user(**validated_data)
+        pre_payload = api_settings.JWT_PAYLOAD_HANDLER(account)
+        token = api_settings.JWT_ENCODE_HANDLER(pre_payload)
+        account.token = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER(token)
         return account
 
     def delete(self, validated_data):
@@ -47,12 +48,9 @@ class AccountSerializer(serializers.ModelSerializer):
         return
 
     def to_representation(self, instance):
-        print('===TO REPRESENTATION INSTANCE===')
-        print(instance.__dict__)
         if getattr(instance, 'token', None):
             ret = instance.token
         else:
             ret = super(AccountSerializer, self).to_representation(instance)
             ret.pop('password', None)
-        # ret = serializer_empty_cleaner(ret)
         return ret

@@ -1,5 +1,4 @@
 # from django.shortcuts import render, get_object_or_404
-from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate
 
 from rest_framework import serializers
@@ -10,7 +9,8 @@ from rest_framework import generics, mixins, viewsets
 from rest_framework_jwt.settings import api_settings
 
 from . serializers import AccountSerializer
-from . models import Account
+
+from django.contrib.auth.models import User
 
 
 class AccountRegistration(generics.CreateAPIView):
@@ -52,6 +52,6 @@ class AccountViewSet(mixins.ListModelMixin,
     """
     @brief      Class for registration.
     """
-    queryset = Account.objects.all()
+    queryset = User.objects.all()
     serializer_class = AccountSerializer
     permission_classes = (AllowAny, )

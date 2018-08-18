@@ -30,6 +30,7 @@ class AccountManager(BaseUserManager):
         return account
 
     def create_superuser(self, password, **kwargs):
+        kwargs['confirm_password'] = password
         account = self.create_user(password, **kwargs)
 
         account.is_admin = True
@@ -47,6 +48,7 @@ class Account(AbstractBaseUser):
     last_name = models.CharField(max_length=40)
 
     is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

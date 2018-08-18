@@ -24,4 +24,3 @@ if os.environ.get('DOCKERIZED'):  # To avoid error in makemigrations during buil
             'USER': os.environ.get('POSTGRES_USER')
         }
     }
-

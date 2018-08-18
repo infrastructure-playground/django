@@ -11,3 +11,4 @@ pytz==2018.5
 djangorestframework-jwt==1.11.0
 coreapi==2.3.3
 pygments==2.2.0
+colorlog==3.1.4
