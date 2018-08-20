@@ -13,8 +13,8 @@ accounts.register(r'accounts', AccountViewSet)
 cwd = os.path.abspath(os.path.dirname(__file__)).split('/')[-1]
 app_name = cwd  # current working directory
 urlpatterns = [
-    re_path(r'register/$', AccountRegistration.as_view()),
-    re_path(r'login/$', AccountLogin.as_view()),
+    re_path(r'register/$', AccountRegistration.as_view(), name='registration'),
+    re_path(r'login/$', AccountLogin.as_view(), name='login'),
 ]
 
 urlpatterns += accounts.urls
