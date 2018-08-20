@@ -1,9 +1,7 @@
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 
-# from . models import Account
 from django.contrib.auth.models import User
-# from core.functions import serializer_empty_cleaner
 
 
 class AccountSerializer(serializers.ModelSerializer):

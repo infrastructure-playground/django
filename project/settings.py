@@ -56,6 +56,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
     '127.0.0.1:4200',
     'localhost:4200',
+    'localhost'
 )
 
 if 'WHITELIST' in os.environ:

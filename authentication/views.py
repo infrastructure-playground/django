@@ -30,11 +30,9 @@ class AccountLogin(generics.CreateAPIView):
 
     def create(self, request):
         """
-        :param request: {'email': 'example.com', 'password': 'pass1234'}
+        :param request: {'username': 'armadadean', 'password': 'pass1234'}
         :return:  {'token': 'abcdef123456'}
         """
-        print('===Request Data===')
-        print(request.data)
         account = authenticate(**request.data)
         if not account:
             raise serializers.ValidationError({'error': 'Incorrect Username or Password'})
