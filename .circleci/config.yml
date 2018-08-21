@@ -29,9 +29,6 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
-      - run: ls
-      - run: printenv
-      - run: curl http://postgres:5432
       - run: python manage.py test authentication.tests.RegistrationTest
       - run: python manage.py test authentication.tests.LoginTest
       - run: python manage.py test inventory.tests.BooksTest
