@@ -10,8 +10,28 @@ services:
 install:
   - docker build . -t infrastructureplayground/django:latest
   - docker network create backend_network
-  - docker run -d unnotech/postgres-replication:10.4 --name=postgres --network=backend_network
-  - docker run -d infrastructureplayground/django:latest --name=django --network=backend_network
+  - docker run \
+    -d \
+    --name=postgres \
+    --env POSTGRES_USER=playground \
+    --env POSTGRES_PASSWORD=playground \
+    --env POSTGRES_DB=playground \
+    --env POSTGRES_PORT=5432 \
+    --env POSTGRES_SERVICE=postgres \
+    --env TZ=Asia/Singapore
+    --network=backend_network \
+    unnotech/postgres-replication:10.4
+  - docker run -d
+    --name=django \
+    --env POSTGRES_USER=playground \
+    --env POSTGRES_PASSWORD=playground \
+    --env POSTGRES_DB=playground \
+    --env POSTGRES_PORT=5432 \
+    --env POSTGRES_SERVICE=postgres \
+    --env DOCKERIZED=true
+    --env TZ=Asia/Singapore
+    --network=backend_network \
+    infrastructureplayground/django:latest
   - docker exec -it django bash
 
 jobs:
