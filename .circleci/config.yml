@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  test:
+  build:
     parallelism: 4
     docker:
       - image: infrastructureplayground/django:latest
@@ -13,7 +13,6 @@ jobs:
           POSTGRES_SERVICE: postgres
           DOCKERIZED: true
           TZ: Asia/Singapore
-
       - image: unnotech/postgres-replication:10.4
           name: postgres
           environment:
@@ -33,4 +32,4 @@ workflows:
   version: 2
   pipeline:
     jobs:
-      - test
+      - build
