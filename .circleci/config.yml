@@ -16,6 +16,7 @@ jobs:
           POSTGRES_SERVICE: postgres
           DOCKERIZED: true
           TZ: Asia/Singapore
+
       - image: unnotech/postgres-replication:10.4
         name: postgres
         environment:
