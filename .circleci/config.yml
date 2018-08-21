@@ -26,9 +26,9 @@ jobs:
     parallelism: 4
 
     steps:
-      - ls
+      - run: ls
       - checkout
-      - ls
+      - run: ls
       - run: python manage.py test authentication.tests.RegistrationTest
       - run: python manage.py test authentication.tests.LoginTest
       - run: python manage.py test inventory.tests.BooksTest
