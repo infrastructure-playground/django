@@ -3,6 +3,10 @@ jobs:
   build:
     docker:
       - image: infrastructureplayground/django:latest
+      - image: unnotech/postgres-replication:10.4
+  test:
+    docker:
+      - image: infrastructureplayground/django:latest
         name: django
         environment:
           POSTGRES_USER: playground
@@ -22,14 +26,19 @@ jobs:
           POSTGRES_PORT: 5432
           POSTGRES_SERVICE: postgres
           TZ: Asia/Singapore
-
-    parallelism: 4
-
     steps:
       - checkout
       - setup_remote_docker:  # needed to connect container ports
           docker_layer_caching: true
-      - run: pwd
       - run: python manage.py test authentication.tests.RegistrationTest
       - run: python manage.py test authentication.tests.LoginTest
       - run: python manage.py test inventory.tests.BooksTest
+
+workflows:
+  version: 2
+  pipeline:
+    jobs:
+      - build
+      - test
+        requires:
+          - build
