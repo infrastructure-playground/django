@@ -7,12 +7,12 @@ python:
 services:
   - docker
 
-before_install:
+install:
   - docker build . -t infrastructureplayground/django:latest
   - docker network create backend_network
-  - docker run -d unnotech/postgres-replication:10.4 --name postgres --network backend_network
-  - docker run -d infrastructureplayground/django:latest --name django --network backend_network
-  - docker ps -a
+  - docker run -d unnotech/postgres-replication:10.4 --name=postgres --network=backend_network
+  - docker run -d infrastructureplayground/django:latest --name=django --network=backend_network
+  - docker exec -it django bash
 
 jobs:
   include:
