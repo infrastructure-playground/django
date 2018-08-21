@@ -29,6 +29,7 @@ jobs:
       - run: ls
       - checkout
       - run: ls
+      - run: printenv
       - run: python manage.py test authentication.tests.RegistrationTest
       - run: python manage.py test authentication.tests.LoginTest
       - run: python manage.py test inventory.tests.BooksTest
