@@ -14,6 +14,7 @@ create_user_data = registration_data.copy()
 del create_user_data['confirm_password']
 login_credentials = {'username': 'armadadean', 'password': 'pass1234'}
 
+
 # Create your tests here.
 class RegistrationTest(APITestCase):
     url = reverse('authentication:registration')
