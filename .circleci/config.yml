@@ -12,6 +12,8 @@ jobs:
           POSTGRES_SERVICE: postgres
           DOCKERIZED: true
           TZ: Asia/Singapore
+      - setup_remote_docker:
+          docker_layer_caching: true
 
       - image: unnotech/postgres-replication:10.4
         name: postgres
