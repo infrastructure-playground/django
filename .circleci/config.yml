@@ -36,11 +36,11 @@ jobs:
       - run: python manage.py test authentication.tests.LoginTest
       - run: python manage.py test inventory.tests.BooksTest
 
-#workflows:
-#  version: 2
-#  pipeline:
-#    jobs:
-#      - build
-#      - test:
-#        requires:
-#          - build
+workflows:
+  version: 2
+  pipeline:
+    jobs:
+      - build
+      - test:
+        requires:
+          - build
