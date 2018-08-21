@@ -4,6 +4,8 @@ jobs:
     docker:
       - image: infrastructureplayground/django:latest
       - image: unnotech/postgres-replication:10.4
+    steps:
+      - checkout
   test:
     parallelism: 4
     docker:
