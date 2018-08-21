@@ -1,44 +1,40 @@
 sudo: required
 
-language: python
-python:
-  - "3.6.4"
-
 services:
   - docker
 
-install:
-  - docker build --cache-from=infrastructureplayground/django:latest -t infrastructureplayground/django:latest .
-  - docker network create backend_network
-  - docker run -d --name=postgres
-    --env POSTGRES_USER=playground
-    --env POSTGRES_PASSWORD=playground
-    --env POSTGRES_DB=playground
-    --env POSTGRES_PORT=5432
-    --env POSTGRES_SERVICE=postgres
-    --env TZ=Asia/Singapore
-    --network=backend_network
-    unnotech/postgres-replication:10.4
-  - docker run -d
-    --name=django
-    --env POSTGRES_USER=playground
-    --env POSTGRES_PASSWORD=playground
-    --env POSTGRES_DB=playground
-    --env POSTGRES_PORT=5432
-    --env POSTGRES_SERVICE=postgres
-    --env DOCKERIZED=true
-    --env TZ=Asia/Singapore
-    --network=backend_network
-    infrastructureplayground/django:latest
-
 jobs:
   include:
+    - stage: Build Docker Image
+      script:
+      - docker build --cache-from=infrastructureplayground/django:latest -t infrastructureplayground/django:latest .
+      - docker network create backend_network
+      - docker run -d --name=postgres
+          --env POSTGRES_USER=playground
+          --env POSTGRES_PASSWORD=playground
+          --env POSTGRES_DB=playground
+          --env POSTGRES_PORT=5432
+          --env POSTGRES_SERVICE=postgres
+          --env TZ=Asia/Singapore
+          --network=backend_network
+          unnotech/postgres-replication:10.4
+      - docker run -d
+          --name=django
+          --env POSTGRES_USER=playground
+          --env POSTGRES_PASSWORD=playground
+          --env POSTGRES_DB=playground
+          --env POSTGRES_PORT=5432
+          --env POSTGRES_SERVICE=postgres
+          --env DOCKERIZED=true
+          --env TZ=Asia/Singapore
+          --network=backend_network
+          infrastructureplayground/django:latest
     - stage: Authentication Unit Testing
       script: docker exec -it django python manage.py test authentication.tests.RegistrationTest
-      script: docker exec -it django python manage.py test authentication.tests.LoginTest
+    - script: docker exec -it django python manage.py test authentication.tests.LoginTest
     - stage: Book Inventory Unit Testing
       script: docker exec -it django python manage.py test inventory.tests.BooksTest.test_list_books
-      script: docker exec -it django python manage.py test inventory.tests.BooksTest.test_create_book
-      script: docker exec -it django python manage.py test inventory.tests.BooksTest.test_get_book
-      script: docker exec -it django python manage.py test inventory.tests.BooksTest.test_update_book
-      script: docker exec -it django python manage.py test inventory.tests.BooksTest.test_delete_book
+    - script: docker exec -it django python manage.py test inventory.tests.BooksTest.test_create_book
+    - script: docker exec -it django python manage.py test inventory.tests.BooksTest.test_get_book
+    - script: docker exec -it django python manage.py test inventory.tests.BooksTest.test_update_book
+    - script: docker exec -it django python manage.py test inventory.tests.BooksTest.test_delete_book
