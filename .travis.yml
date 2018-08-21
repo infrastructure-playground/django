@@ -1,6 +1,8 @@
 sudo: required
 
 language: python
+python:
+  - "3.6.4"
 
 services:
   - docker
@@ -10,6 +12,7 @@ before_install:
   - docker network create backend_network
   - docker run -d unnotech/postgres-replication:10.4 --name postgres --network backend_network
   - docker run -d infrastructureplayground/django:latest --name django --network backend_network
+  - docker ps -a
   - docker exec -it django bash
 
 jobs:
