@@ -38,9 +38,7 @@ jobs:
 
 workflows:
   version: 2
-  pipeline:
+  build_and_test:
     jobs:
       - build
-      - test:
-        requires:
-          - build
+      - test
