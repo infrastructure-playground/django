@@ -14,8 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.conf import settings
+from django.urls import path, include, re_path
+from rest_framework.permissions import AllowAny
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
+from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # path(r'api-token-auth/', obtain_jwt_token),
+    path('api-token-refresh/', refresh_jwt_token),
+    re_path(r'^v1/authentication/',
+            include('authentication.urls', namespace='authentication')),
+    re_path(r'^v1/inventory/',
+            include('inventory.urls', namespace='inventory')),
 ]
+
+if settings.DEBUG:
+    urlpatterns.append(path(r'docs/', include_docs_urls(title='API Docs',
+                            permission_classes=(AllowAny, ))))
