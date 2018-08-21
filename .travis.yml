@@ -30,16 +30,15 @@ install:
     --env TZ=Asia/Singapore
     --network=backend_network
     infrastructureplayground/django:latest
-  - docker exec -it django bash
 
 jobs:
   include:
     - stage: Authentication Unit Testing
-      script: python manage.py test authentication.tests.RegistrationTest
-      script: python manage.py test authentication.tests.LoginTest
+      script: docker exec -it django python manage.py test authentication.tests.RegistrationTest
+      script: docker exec -it django python manage.py test authentication.tests.LoginTest
     - stage: Book Inventory Unit Testing
-      script: python manage.py test inventory.tests.BooksTest.test_list_books
-      script: python manage.py test inventory.tests.BooksTest.test_create_book
-      script: python manage.py test inventory.tests.BooksTest.test_get_book
-      script: python manage.py test inventory.tests.BooksTest.test_update_book
-      script: python manage.py test inventory.tests.BooksTest.test_delete_book
+      script: docker exec -it django python manage.py test inventory.tests.BooksTest.test_list_books
+      script: docker exec -it django python manage.py test inventory.tests.BooksTest.test_create_book
+      script: docker exec -it django python manage.py test inventory.tests.BooksTest.test_get_book
+      script: docker exec -it django python manage.py test inventory.tests.BooksTest.test_update_book
+      script: docker exec -it django python manage.py test inventory.tests.BooksTest.test_delete_book
