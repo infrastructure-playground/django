@@ -5,6 +5,7 @@ jobs:
       - image: infrastructureplayground/django:latest
       - image: unnotech/postgres-replication:10.4
   test:
+    parallelism: 4
     docker:
       - image: infrastructureplayground/django:latest
         name: django
@@ -16,7 +17,6 @@ jobs:
           POSTGRES_SERVICE: postgres
           DOCKERIZED: true
           TZ: Asia/Singapore
-
       - image: unnotech/postgres-replication:10.4
         name: postgres
         environment:
