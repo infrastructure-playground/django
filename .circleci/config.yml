@@ -1,49 +1,46 @@
-version: 2.0
-
+version: 2
 jobs:
-  "ruby-2.2":
+  build:
     docker:
-      - image: circleci/ruby:2.2-node
-      - image: circleci/postgres:9.4.12-alpine
-    working_directory: ~/circleci-demo-workflows
+      - image: infrastructureplayground/django:latest
+      - image: unnotech/postgres-replication:10.4
     steps:
       - checkout
-      - run: bundle install --path vendor/bundle
-      - run: bundle exec rake db:create db:schema:load
-      - run:
-          name: Run tests
-          command: rake
-
-  "ruby-2.3":
+  test:
+    parallelism: 4
     docker:
-      - image: circleci/ruby:2.3-node
-      - image: circleci/postgres:9.4.12-alpine
-    working_directory: ~/circleci-demo-workflows
+      - image: infrastructureplayground/django:latest
+        name: django
+        environment:
+          POSTGRES_USER: playground
+          POSTGRES_PASSWORD: playground
+          POSTGRES_DB: playground
+          POSTGRES_PORT: 5432
+          POSTGRES_SERVICE: postgres
+          DOCKERIZED: true
+          TZ: Asia/Singapore
+      - image: unnotech/postgres-replication:10.4
+        name: postgres
+        environment:
+          POSTGRES_USER: playground
+          POSTGRES_PASSWORD: playground
+          POSTGRES_DB: playground
+          POSTGRES_PORT: 5432
+          POSTGRES_SERVICE: postgres
+          TZ: Asia/Singapore
     steps:
       - checkout
-      - run: bundle install --path vendor/bundle
-      - run: bundle exec rake db:create db:schema:load
-      - run:
-          name: Run tests
-          command: rake
-
-  "ruby-2.4":
-    docker:
-      - image: circleci/ruby:2.4-node
-      - image: circleci/postgres:9.4.12-alpine
-    working_directory: ~/circleci-demo-workflows
-    steps:
-      - checkout
-      - run: bundle install --path vendor/bundle
-      - run: bundle exec rake db:create db:schema:load
-      - run:
-          name: Run tests
-          command: rake
+      - setup_remote_docker:  # needed to connect container ports
+          docker_layer_caching: true
+      - run: python manage.py test authentication.tests.RegistrationTest
+      - run: python manage.py test authentication.tests.LoginTest
+      - run: python manage.py test inventory.tests.BooksTest
 
 workflows:
   version: 2
-  build:
+  build_and_test:
     jobs:
-      - "ruby-2.2"
-      - "ruby-2.3"
-      - "ruby-2.4"
+      - build
+      - test:
+          requires:
+            - build
