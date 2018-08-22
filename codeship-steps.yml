@@ -18,12 +18,13 @@
   tag: master
 
 - type: serial
+  name: deploy_to_staging
+  tag: "master"
   steps:
-    - name: deploy_to_staging
-      service: django
-      type: push
-      image_name: infrastructureplayground/django:latest
-      encrypted_dockercfg_path: dockercfg.encrypted
+    service: django
+    type: push
+    image_name: infrastructureplayground/django:latest
+    encrypted_dockercfg_path: dockercfg.encrypted
 
 # Helpful Resources:
 # - https://documentation.codeship.com/pro/builds-and-configuration/steps/
