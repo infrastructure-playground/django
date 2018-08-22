@@ -1,4 +1,5 @@
-- name: migrate
+- type: serial
+  name: migrate
   service: django
   command: python manage.py migrate
 - type: parallel
@@ -14,8 +15,16 @@
   steps:
     - service: django
       command: python manage.py test inventory.tests.BooksTest
+- name: deploy_to_staging
+  tag: master
 
-
+- type: serial
+  name: deploy_to_staging
+  tag: master
+  steps:
+    - service: django
+      type: push
 
 # Helpful Resources:
 # - https://documentation.codeship.com/pro/builds-and-configuration/steps/
+# - https://documentation.codeship.com/pro/quickstart/getting-started-part-three/
