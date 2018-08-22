@@ -5,7 +5,7 @@ services:
     build:
       image: infrastructureplayground/django:latest
       dockerfile: Dockerfile
-    entrypoint: codeship-entrypoint.sh
+    entrypoint: /usr/src/app/codeship-entrypoint.sh
   postgres:
     image: unnotech/postgres-replication:10.4
 
