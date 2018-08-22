@@ -1,12 +1,6 @@
 version: 2
 jobs:
-  build:
-    docker:
-      - image: infrastructureplayground/django:latest
-      - image: unnotech/postgres-replication:10.4
-    steps:
-      - checkout
-  test:
+  login_test:
     parallelism: 4
     docker:
       - image: infrastructureplayground/django:latest
@@ -36,13 +30,41 @@ jobs:
       - run: python manage.py migrate
       - run: python manage.py test authentication.tests.RegistrationTest
       - run: python manage.py test authentication.tests.LoginTest
+  inventory_test:
+    parallelism: 4
+    docker:
+      - image: infrastructureplayground/django:latest
+        name: django
+        environment:
+          POSTGRES_USER: playground
+          POSTGRES_PASSWORD: playground
+          POSTGRES_DB: playground
+          POSTGRES_PORT: 5432
+          POSTGRES_SERVICE: postgres
+          DOCKERIZED: true
+          TZ: Asia/Singapore
+      - image: unnotech/postgres-replication:10.4
+        name: postgres
+        environment:
+          POSTGRES_USER: playground
+          POSTGRES_PASSWORD: playground
+          POSTGRES_DB: playground
+          POSTGRES_PORT: 5432
+          POSTGRES_SERVICE: postgres
+          TZ: Asia/Singapore
+    steps:
+      - checkout
+      - setup_remote_docker:  # needed to connect container ports
+          docker_layer_caching: true
+      - run: python manage.py makemigrations
+      - run: python manage.py migrate
       - run: python manage.py test inventory.tests.BooksTest
 
 workflows:
   version: 2
-  build_and_test:
+  pipeline:
     jobs:
-      - build
-      - test:
+      - login_test
+      - inventory_test:
           requires:
-            - build
+            - login_test
