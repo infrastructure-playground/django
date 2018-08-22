@@ -1,7 +1,7 @@
 version: 2
 jobs:
   login_test:
-    parallelism: 4
+    # parallelism: 4
     docker:
       - image: infrastructureplayground/django:latest
         name: django
@@ -31,7 +31,7 @@ jobs:
       - run: python manage.py test authentication.tests.RegistrationTest
       - run: python manage.py test authentication.tests.LoginTest
   inventory_test:
-    parallelism: 4
+    # parallelism: 4
     docker:
       - image: infrastructureplayground/django:latest
         name: django
