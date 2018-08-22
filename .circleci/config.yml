@@ -64,14 +64,14 @@ jobs:
     steps:
       - checkout
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker build -t infrastructureplayground/django:latest .
+      - run: docker build --cache-from=infrastructureplayground/django:latest -t infrastructureplayground/django:latest .
       - run: docker push infrastructureplayground/django:latest
   deploy_to_production:
     machine: true
     steps:
       - checkout
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker build -t infrastructureplayground/django:production .
+      - run: docker build --cache-from=infrastructureplayground/django:latest -t infrastructureplayground/django:production .
       - run: docker push infrastructureplayground/django:production
 
 
@@ -82,6 +82,9 @@ workflows:
       - login_test
       - inventory_test
       - deploy_to_staging:
+          requires:
+            - login_test
+            - inventory_test
           filters:
             branches:
               only:
