@@ -5,8 +5,8 @@ services:
     build:
       image: infrastructureplayground/django:latest
       dockerfile: Dockerfile
+    entrypoint: []
     cached: true
-    entrypoint:
   postgres:
     image: unnotech/postgres-replication:10.4
 
