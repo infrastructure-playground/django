@@ -2,8 +2,8 @@ version: '2'
 
 services:
   django:
-    build: .
-    image: infrastructureplayground/django:latest
+    build:
+      image: infrastructureplayground/django:latest
   postgres:
     image: unnotech/postgres-replication:10.4
 
