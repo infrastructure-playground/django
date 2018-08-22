@@ -20,7 +20,6 @@
 - type: serial
   steps:
     - name: deploy_to_staging
-      tag: master
       service: django
       type: push
 
