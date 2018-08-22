@@ -72,3 +72,12 @@ workflows:
       - deploy_to_production:
           requires:
             - production_hold
+
+# Helpful Resource:
+# - https://circleci.com/docs/2.0/building-docker-images/
+# - https://circleci.com/docs/2.0/parallelism-faster-jobs/
+# - https://circleci.com/docs/2.0/configuration-reference/
+# - https://circleci.com/docs/2.0/workflows/
+# - https://circleci.com/docs/2.0/env-vars/#built-in-environment-variables
+# - https://github.com/magento-engcom/community-portal/wiki/Circle-CI-Setup-and-Workflow
+# - https://discuss.circleci.com/t/workflows-pull-request-filter/14396/10
