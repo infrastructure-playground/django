@@ -91,7 +91,7 @@ workflows:
           filters:
             branches:
               only:
-              - master
+                - production
       - deploy_to_production:
           requires:
             - production_hold
