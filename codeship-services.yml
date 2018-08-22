@@ -4,8 +4,7 @@ services:
   django:
     build:
       image: infrastructureplayground/django:latest
-      dockerfile: Dockerfile
-    entrypoint: []
+      dockerfile: Dockerfile.codeship
     cached: true
   postgres:
     image: unnotech/postgres-replication:10.4
