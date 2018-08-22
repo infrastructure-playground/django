@@ -1,3 +1,6 @@
+- name: migrate
+  service: django
+  command: python manage.py migrate
 - type: parallel
   name: authentication_test
   steps:
@@ -16,4 +19,3 @@
 
 # Helpful Resources:
 # - https://documentation.codeship.com/pro/builds-and-configuration/steps/
-# - https://community.codeship.com/t/override-entrypoint-in-codeship-steps-yml/5252/3
