@@ -17,10 +17,10 @@ if os.environ.get('DOCKERIZED'):  # To avoid error in makemigrations during buil
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'HOST': os.environ.get('POSTGRES_SERVICE'),
-            'NAME': os.environ.get('POSTGRES_DB'),
-            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-            'PORT': os.environ.get('POSTGRES_PORT'),
-            'USER': os.environ.get('POSTGRES_USER')
+            'HOST': os.environ.get('POSTGRES_SERVICE', 'postgres'),
+            'NAME': os.environ.get('POSTGRES_DB', 'postgres'),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'postgres'),
+            'PORT': os.environ.get('POSTGRES_PORT', 5432),
+            'USER': os.environ.get('POSTGRES_USER', 'postgres')
         }
     }
