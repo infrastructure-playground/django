@@ -21,7 +21,7 @@
   tag: master
   steps:
     - name: deploy_to_staging
-    - service: django
+      service: django
       type: push
 
 # Helpful Resources:
