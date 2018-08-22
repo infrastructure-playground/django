@@ -59,6 +59,21 @@ jobs:
       - run: python manage.py makemigrations
       - run: python manage.py migrate
       - run: python manage.py test inventory.tests.BooksTest
+  deploy_to_staging:
+    machine: true
+    steps:
+      - checkout
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker build -t infrastructureplayground/django:latest
+      - run: docker push infrastructureplayground/django:latest
+  deploy_to_production:
+    machine: true
+      steps:
+      - checkout
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker build -t infrastructureplayground/django:production
+      - run: docker push infrastructureplayground/django:production
+
 
 workflows:
   version: 2
@@ -66,3 +81,17 @@ workflows:
     jobs:
       - login_test
       - inventory_test
+      - deploy_to_staging:
+          filters:
+            branches:
+              only:
+                - master
+      - production_hold:
+          type: approval
+          filters:
+            branches:
+              only:
+              - master
+      - deploy_to_production:
+          requires:
+            - production_hold
