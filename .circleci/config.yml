@@ -3,22 +3,23 @@ jobs:
   login_test:
     # parallelism: 4  # To run a job’s steps in parallel, set the parallelism key to a value greater than 1.
     docker:
-      - image: infrastructureplayground/django:latest
+      - image: infrastructureplayground/django:latest  # the first image is the environment where steps will be executed
         name: django
         environment:
           DOCKERIZED: true
       - image: unnotech/postgres-replication:10.4
         name: postgres
     steps:
-      - checkout
+      - checkout  # to pull the source code from repository
       - setup_remote_docker:  # needed to connect container ports
           docker_layer_caching: true
+      - run: pip install -r requirements.txt
       - run: python manage.py makemigrations
       - run: python manage.py migrate
       - run: python manage.py test authentication.tests.RegistrationTest
       - run: python manage.py test authentication.tests.LoginTest
   inventory_test:
-    # parallelism: 4  # To run a job’s steps in parallel, set the parallelism key to a value greater than 1.
+    # parallelism: 4
     docker:
       - image: infrastructureplayground/django:latest
         name: django
@@ -30,6 +31,7 @@ jobs:
       - checkout
       - setup_remote_docker:  # needed to connect container ports
           docker_layer_caching: true
+      - run: pip install -r requirements.txt
       - run: python manage.py makemigrations
       - run: python manage.py migrate
       - run: python manage.py test inventory.tests.BooksTest
