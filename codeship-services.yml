@@ -4,6 +4,7 @@ services:
   django:
     build:
       image: infrastructureplayground/django:latest
+      dockerfile: Dockerfile
   postgres:
     image: unnotech/postgres-replication:10.4
 
