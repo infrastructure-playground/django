@@ -64,14 +64,14 @@ jobs:
     steps:
       - checkout
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker build -t infrastructureplayground/django:latest
+      - run: docker build -t infrastructureplayground/django:latest .
       - run: docker push infrastructureplayground/django:latest
   deploy_to_production:
     machine: true
     steps:
       - checkout
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker build -t infrastructureplayground/django:production
+      - run: docker build -t infrastructureplayground/django:production .
       - run: docker push infrastructureplayground/django:production
 
 
