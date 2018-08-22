@@ -65,6 +65,4 @@ workflows:
   pipeline:
     jobs:
       - login_test
-      - inventory_test:
-          requires:
-            - login_test
+      - inventory_test
