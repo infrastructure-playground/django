@@ -32,10 +32,10 @@ jobs:
       - checkout
       - setup_remote_docker:  # needed to connect container ports
           docker_layer_caching: true
-      - run: python manage.py migrate
-#      - run: python manage.py test authentication.tests.RegistrationTest
-#      - run: python manage.py test authentication.tests.LoginTest
-#      - run: python manage.py test inventory.tests.BooksTest
+      - run: ./entrypoint.sh
+      - run: python manage.py test authentication.tests.RegistrationTest
+      - run: python manage.py test authentication.tests.LoginTest
+      - run: python manage.py test inventory.tests.BooksTest
 
 workflows:
   version: 2
