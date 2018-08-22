@@ -6,22 +6,9 @@ jobs:
       - image: infrastructureplayground/django:latest
         name: django
         environment:
-          POSTGRES_USER: playground
-          POSTGRES_PASSWORD: playground
-          POSTGRES_DB: playground
-          POSTGRES_PORT: 5432
-          POSTGRES_SERVICE: postgres
           DOCKERIZED: true
-          TZ: Asia/Singapore
       - image: unnotech/postgres-replication:10.4
         name: postgres
-        environment:
-          POSTGRES_USER: playground
-          POSTGRES_PASSWORD: playground
-          POSTGRES_DB: playground
-          POSTGRES_PORT: 5432
-          POSTGRES_SERVICE: postgres
-          TZ: Asia/Singapore
     steps:
       - checkout
       - setup_remote_docker:  # needed to connect container ports
