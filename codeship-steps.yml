@@ -1,0 +1,18 @@
+- type: parallel
+  name: authentication_test
+  steps:
+    - service: django
+      command: python manage.py test authentication.tests.RegistrationTest
+    - service: django
+      command: python manage.py test authentication.tests.LoginTest
+
+- type: parallel
+  name: inventory_test
+  steps:
+    - service: django
+      command: python manage.py test inventory.tests.BooksTest
+
+
+
+# Helpful Resources:
+# - https://documentation.codeship.com/pro/builds-and-configuration/steps/
