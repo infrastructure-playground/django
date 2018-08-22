@@ -14,17 +14,15 @@
   steps:
     - service: django
       command: python manage.py test inventory.tests.BooksTest
-- name: deploy_to_staging
-  tag: master
 
-#- type: serial
-#  name: deploy_to_staging
-#  tag: "master"
-#  steps:
-#    service: django
-#    type: push
-#    image_name: infrastructureplayground/django:latest
-#    encrypted_dockercfg_path: dockercfg.encrypted
+- type: serial
+  name: deploy_to_staging
+  tag: "master"
+  steps:
+    service: django
+    type: push
+    image_name: infrastructureplayground/django:latest
+    encrypted_dockercfg_path: dockercfg.encrypted
 
 # Helpful Resources:
 # - https://documentation.codeship.com/pro/builds-and-configuration/steps/
