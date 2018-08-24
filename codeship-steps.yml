@@ -1,4 +1,4 @@
-bbbb- name: migrate
+- name: migrate
   service: django
   command: python manage.py migrate
 
@@ -30,7 +30,7 @@ bbbb- name: migrate
 - type: manual
   tag: "production"
   steps:
-    - name: deploy_to_productionb
+    - name: deploy_to_production
       service: django
       type: push
       image_name: infrastructureplayground/django
