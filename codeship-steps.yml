@@ -22,7 +22,9 @@
     - name: deploy_to_staging
       service: django
       type: push
-      image_name: infrastructureplayground/django:latest
+      image_name: infrastructureplayground/django
+      image_tag: latest
+      registry: https://index.docker.io/v1/
       encrypted_dockercfg_path: dockercfg.encrypted
 
 # Helpful Resources:
