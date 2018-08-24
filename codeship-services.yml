@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+  django:
+    build:
+      image: infrastructureplayground/django:latest
+      dockerfile: Dockerfile.codeship
+    cached: true
+  postgres:
+    image: unnotech/postgres-replication:10.4
+
+# Helpful Resources:
+# - https://documentation.codeship.com/pro/builds-and-configuration/services/
+# - https://community.codeship.com/t/override-entrypoint-in-codeship-steps-yml/5252/3

@@ -102,3 +102,6 @@ db.sqlite3
 
 # media
 media/*
+
+codeship.aes
+dockercfg
