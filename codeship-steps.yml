@@ -1,6 +1,7 @@
 - name: migrate
   service: django
   command: python manage.py migrate
+
 - type: parallel
   name: authentication_test
   steps:
