@@ -28,9 +28,10 @@ bbbb- name: migrate
       encrypted_dockercfg_path: dockercfg.encrypted
 
 - type: manual
-  tag: "bproduction"
+  tag: "production"
   steps:
-    - service: django
+    - name: deploy_to_productionb
+      service: django
       type: push
       image_name: infrastructureplayground/django
       image_tag: production
