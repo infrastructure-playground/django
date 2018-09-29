@@ -48,7 +48,7 @@ jobs:
         name: GCP
     steps:
       - checkout
-      - run: echo $STORAGE_BUCKETS_KEY > storage-buckets-key.json.json
+      - run: echo $STORAGE_BUCKETS_KEY > storage-buckets-key.json
       - run: gcloud auth activate-service-account --key-file=storage-buckets-key.json
       - run: apt-get install python3-pip
       - run: pip3 install -r requirements.txt
@@ -60,7 +60,7 @@ jobs:
       name: GCP
     steps:
       - checkout
-      - run: echo $STORAGE_BUCKETS_KEY > storage-buckets-key.json.json
+      - run: echo $STORAGE_BUCKETS_KEY > storage-buckets-key.json
       - run: gcloud auth activate-service-account --key-file=storage-buckets-key.json
       - run: gsutil cp gs://infrastructure-playground-secrets/staging/secrets.json .
       - run: gsutil cp gs://infrastructure-playground-secrets/staging/gae-key.json .
