@@ -55,8 +55,8 @@ jobs:
       - run: pip3 install -r requirements.txt
       - run: echo 'yes' | python3 manage.py collectstatic
       - deploy:
-        command: |
-          gsutil -m cp -r static gs://infrastructure-playground/staging/static
+          command: |
+            gsutil -m cp -r static gs://infrastructure-playground/staging/static
   deploy_to_staging_code:
     parallelism: 2
     docker:
@@ -74,8 +74,8 @@ jobs:
       - run: sed -i "s/ARG CIRCLE_BRANCH/ARG CIRCLE_BRANCH=$CIRCLE_BRANCH/" Dockerfile
       - run: gcloud auth activate-service-account --key-file=gae-key.json
       - deploy:
-        command: |
-          yes YES | gcloud app deploy app.yml
+          command: |
+            yes YES | gcloud app deploy app.yml
   deploy_to_production:
     machine: true
     steps:
