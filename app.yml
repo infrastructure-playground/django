@@ -1,0 +1,16 @@
+runtime: custom
+env: flex
+
+env_variables:
+  POSTGRES_SERVICE: "/cloudsql/perfect-jetty-217307:asia-northeast1:playground-2"
+  POSTGRES_DB: "postgres"
+  POSTGRES_PASSWORD: "playground"
+  POSTGRES_USER: "postgres"
+  # SECRET_KEY: "${SECRET_KEY}"
+
+# instance_class: B8
+manual_scaling:
+  instances: 2
+
+beta_settings:
+  cloud_sql_instances: "perfect-jetty-217307:asia-northeast1:playground-2"

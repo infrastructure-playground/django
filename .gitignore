@@ -103,5 +103,8 @@ db.sqlite3
 # media
 media/*
 
+# sensitive data
 codeship.aes
 dockercfg
+secrets.json
+*-key.json
