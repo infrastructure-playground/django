@@ -84,18 +84,20 @@ workflows:
     jobs:
       - login_test
       - inventory_test
-      - deploy_to_staging_static:
+      - push_docker_image:
           requires:
             - login_test
             - inventory_test
+      - deploy_to_staging_static:
+          requires:
+            - push_docker_image
           filters:
             branches:
               only:
                 - master
       - deploy_to_staging_code:
           requires:
-          - login_test
-          - inventory_test
+            - push_docker_image
           filters:
             branches:
               only:
