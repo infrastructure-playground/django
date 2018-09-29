@@ -60,6 +60,8 @@ jobs:
       name: GCP
     steps:
       - checkout
+      - run: gcloud config set compute/region asia-northeast1
+      - run: gcloud config set project $PROJECT_ID
       - run: echo $STORAGE_BUCKETS_KEY > storage-buckets-key.json
       - run: gcloud auth activate-service-account --key-file=storage-buckets-key.json
       - run: gsutil cp gs://infrastructure-playground-secrets/staging/secrets.json .
@@ -84,18 +86,20 @@ workflows:
     jobs:
       - login_test
       - inventory_test
-      - deploy_to_staging_static:
+      - push_docker_image:
           requires:
             - login_test
             - inventory_test
+      - deploy_to_staging_static:
+          requires:
+            - push_docker_image
           filters:
             branches:
               only:
                 - master
       - deploy_to_staging_code:
           requires:
-          - login_test
-          - inventory_test
+            - push_docker_image
           filters:
             branches:
               only:
