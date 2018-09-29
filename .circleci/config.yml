@@ -54,7 +54,9 @@ jobs:
       - run: apt-get install python3-pip -y
       - run: pip3 install -r requirements.txt
       - run: echo 'yes' | python3 manage.py collectstatic
-      - deploy: gsutil -m cp -r static gs://infrastructure-playground/staging/static
+      - deploy:
+        command: |
+          gsutil -m cp -r static gs://infrastructure-playground/staging/static
   deploy_to_staging_code:
     parallelism: 2
     docker:
@@ -71,7 +73,9 @@ jobs:
       - run: export CLOUDSQL_HOST=`cat secrets.json | python -c 'import json,sys;obj=json.load(sys.stdin);print(obj["CLOUDSQL_HOST"]);'`; sed -i "s/CLOUD_SQL_CONNECTION_NAME/'$CLOUDSQL_HOST'/" app.yml  # export in circleci will not store variables in the next run
       - run: sed -i "s/ARG CIRCLE_BRANCH/ARG CIRCLE_BRANCH=$CIRCLE_BRANCH/" Dockerfile
       - run: gcloud auth activate-service-account --key-file=gae-key.json
-      - deploy: yes YES | gcloud app deploy app.yml
+      - deploy:
+        command: |
+          yes YES | gcloud app deploy app.yml
   deploy_to_production:
     machine: true
     steps:
