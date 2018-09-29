@@ -43,6 +43,7 @@ jobs:
       - run: docker build --build-arg CIRCLE_BRANCH=$CIRCLE_BRANCH --cache-from=infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH -t infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH .
       - run: docker push infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
   deploy_to_staging_static:
+    parallelism: 4
     docker:
       - image: google/cloud-sdk
         name: GCP
@@ -53,14 +54,15 @@ jobs:
       - run: apt-get install python3-pip -y
       - run: pip3 install -r requirements.txt
       - run: echo 'yes' | python3 manage.py collectstatic
-      - run: gsutil -m cp -r static gs://infrastructure-playground/staging/static
+      - deploy: gsutil -m cp -r static gs://infrastructure-playground/staging/static
   deploy_to_staging_code:
+    parallelism: 2
     docker:
     - image: google/cloud-sdk
       name: GCP
     steps:
       - checkout
-      - run: gcloud config set compute/region asia-northeast1
+      - run: gcloud config set compute/region asia-east1
       - run: gcloud config set project $PROJECT_ID
       - run: echo $STORAGE_BUCKETS_KEY > storage-buckets-key.json
       - run: gcloud auth activate-service-account --key-file=storage-buckets-key.json
@@ -69,7 +71,7 @@ jobs:
       - run: export CLOUDSQL_HOST=`cat secrets.json | python -c 'import json,sys;obj=json.load(sys.stdin);print(obj["CLOUDSQL_HOST"]);'`; sed -i "s/CLOUD_SQL_CONNECTION_NAME/'$CLOUDSQL_HOST'/" app.yml  # export in circleci will not store variables in the next run
       - run: sed -i "s/ARG CIRCLE_BRANCH/ARG CIRCLE_BRANCH=$CIRCLE_BRANCH/" Dockerfile
       - run: gcloud auth activate-service-account --key-file=gae-key.json
-      - run: yes YES | gcloud app deploy app.yml
+      - deploy: yes YES | gcloud app deploy app.yml
   deploy_to_production:
     machine: true
     steps:
