@@ -4,9 +4,9 @@ jobs:
     parallelism: 2
     docker:
       - image: infrastructureplayground/$CIRCLE_PROJECT_REPONAME:latest  # the first image is the environment where steps will be executed
-          name: django
-          environment:
-            DOCKERIZED: true
+        name: django
+        environment:
+          DOCKERIZED: true
       - image: unnotech/postgres-replication:10.4
         name: postgres
     steps:
