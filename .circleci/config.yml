@@ -1,7 +1,7 @@
-version: 2
+version: 2.1
 jobs:
   login_test:
-    # parallelism: 4  # To run a job’s steps in parallel, set the parallelism key to a value greater than 1.
+    parallelism: 1  # To run a job’s steps in parallel, set the parallelism key to a value greater than 1.
     docker:
       - image: infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH  # the first image is the environment where steps will be executed
         name: django
@@ -19,7 +19,7 @@ jobs:
       - run: python manage.py test authentication.tests.RegistrationTest
       - run: python manage.py test authentication.tests.LoginTest
   inventory_test:
-    # parallelism: 4
+    parallelism: 1
     docker:
       - image: infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
         name: django
@@ -40,7 +40,15 @@ jobs:
     steps:
       - checkout
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker build --build-arg CIRCLE_BRANCH=$CIRCLE_BRANCH --cache-from=infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH -t infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH .
+      - run: echo $WHITELIST
+      - run: >-
+             docker build
+             --env CDN_HOSTNAME=$CDN_HOSTNAME
+             --env WHITELIST=$WHITELIST
+             --build-arg CIRCLE_BRANCH=$CIRCLE_BRANCH
+             --cache-from=infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
+             -t infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
+             .
       - run: docker push infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
   deploy_to_staging_static:
     parallelism: 4
@@ -54,7 +62,7 @@ jobs:
       - run: apt-get install python3-pip -y
       - run: pip3 install -r requirements.txt
       - run: echo 'yes' | python3 manage.py collectstatic
-      - run: gsutil -m cp -r static gs://infrastructure-playground/staging/static
+      - run: gsutil -m cp -r static/. gs://infrastructure-playground/static/
   deploy_to_staging_code:
     parallelism: 2
     docker:
@@ -68,10 +76,11 @@ jobs:
       - run: gcloud auth activate-service-account --key-file=storage-buckets-key.json
       - run: gsutil cp gs://infrastructure-playground-secrets/staging/secrets.json .
       - run: gsutil cp gs://infrastructure-playground-secrets/staging/gae-key.json .
-      - run: export CLOUDSQL_HOST=`cat secrets.json | python -c 'import json,sys;obj=json.load(sys.stdin);print(obj["CLOUDSQL_HOST"]);'`; sed -i "s/CLOUD_SQL_CONNECTION_NAME/'$CLOUDSQL_HOST'/" app.yml  # export in circleci will not store variables in the next run
+      # export in circleci will not store variables in the next run
+      - run: export CLOUDSQL_HOST=`cat secrets.json | python -c 'import json,sys;obj=json.load(sys.stdin);print(obj["CLOUDSQL_HOST"]);'`; sed -i "s/CLOUD_SQL_CONNECTION_NAME/'$CLOUDSQL_HOST'/" app.yml
       - run: sed -i "s/ARG CIRCLE_BRANCH/ARG CIRCLE_BRANCH=$CIRCLE_BRANCH/" Dockerfile
       - run: gcloud auth activate-service-account --key-file=gae-key.json
-      - run: yes YES | gcloud app deploy app.yml || exit 0
+      - run: chmod u+x cloud_deploy.sh && ./cloud_deploy.sh
   deploy_to_production:
     machine: true
     steps:
