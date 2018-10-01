@@ -10,10 +10,10 @@ EXPOSE 8000
 RUN apt-get update &&     apt-get install vim -y
 
 # To copy existing python packages commands
- COPY --from=project /usr/local/bin/. /usr/local/bin/.
+COPY --from=project /usr/local/bin/. /usr/local/bin/.
 
 # To copy existing python packages
- COPY --from=project /usr/local/lib/python3.6/site-packages/. /usr/local/lib/python3.6/site-packages/.
+COPY --from=project /usr/local/lib/python3.6/site-packages/. /usr/local/lib/python3.6/site-packages/.
 
 # COPY locale locale
 # RUN python manage.py compilemessages
@@ -21,7 +21,10 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 # To copy existing migration files
- COPY --from=project /usr/src/app/. .
+COPY --from=project /usr/src/app/. .
+
+ENV CDN_HOSTNAME=${CDN_HOSTNAME}
+ENV WHITELIST=${WHITELIST}
 
 COPY . .
 RUN timeout 30 yes | python manage.py makemigrations
