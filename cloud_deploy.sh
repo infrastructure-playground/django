@@ -2,10 +2,11 @@
 
 yes YES | gcloud app deploy app.yml
 
-if [$? == 141]
+if [ $? = 0 ] || [ $? = 141 ]
 then
+    echo "Experienced exit code $?: Successful! "
     exit 0
 else
-    echo "Experienced exit code $?"
-    exit $?
+    echo "Experienced exit code $?: Failed!"
+    false
 fi
