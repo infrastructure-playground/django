@@ -7,4 +7,5 @@ then
     exit 0
 else
     echo "Experienced exit code $?"
+    exit $?
 fi
