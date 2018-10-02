@@ -1,7 +1,7 @@
 version: 2.1
 jobs:
   unit_test:
-    parallelism: 4
+    parallelism: 1
     docker:
       - image: infrastructureplayground/$CIRCLE_PROJECT_REPONAME:latest  # the first image is the environment where steps will be executed
         name: django
@@ -70,7 +70,7 @@ jobs:
              .
       - run: docker push infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
   deploy_to_staging_static:
-    parallelism: 4
+    parallelism: 1
     docker:
       - image: google/cloud-sdk
         name: GCP
@@ -83,7 +83,7 @@ jobs:
       - run: echo 'yes' | python3 manage.py collectstatic
       - run: gsutil -m cp -r static/. gs://infrastructure-playground/static/
   deploy_to_staging_code:
-    parallelism: 2
+    parallelism: 1
     docker:
     - image: google/cloud-sdk
       name: GCP
