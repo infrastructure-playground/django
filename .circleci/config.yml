@@ -1,7 +1,7 @@
 version: 2.1
 jobs:
   unit_test:
-    parallelism: 2
+    parallelism: 4
     docker:
       - image: infrastructureplayground/$CIRCLE_PROJECT_REPONAME:latest  # the first image is the environment where steps will be executed
         name: django
@@ -18,13 +18,6 @@ jobs:
       - run: python manage.py migrate
       - run: python manage.py test authentication.tests.RegistrationTest
       - run: python manage.py test authentication.tests.LoginTest
-    steps:
-      - checkout
-      - setup_remote_docker:  # needed to connect container ports
-          docker_layer_caching: true
-      - run: pip install -r requirements.txt
-      - run: python manage.py makemigrations
-      - run: python manage.py migrate
       - run: python manage.py test inventory.tests.BooksTest
   login_test:
     parallelism: 1  # To run a job’s steps in parallel, set the parallelism key to a value greater than 1.

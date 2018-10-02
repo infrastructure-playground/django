@@ -23,6 +23,9 @@ RUN pip install -r requirements.txt
 # To copy existing migration files
 COPY --from=project /usr/src/app/. .
 
+ARG CDN_HOSTNAME
+ARG WHITELIST
+
 ENV CDN_HOSTNAME=${CDN_HOSTNAME}
 ENV WHITELIST=${WHITELIST}
 

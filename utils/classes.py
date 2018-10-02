@@ -1,12 +1,13 @@
 import threading
+from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from storages.backends.gcloud import GoogleCloudStorage
 
-class EmailThread(threading.Thread):
-    '''
-    @brief      Avoids the usual delay on the backend when sending an e-mail
-    '''
 
+class EmailThread(threading.Thread):
+    """
+    @brief      Avoids the usual delay on the backend when sending an e-mail
+    """
     def __init__(self, subject, body, from_email, recipient_list,
                  fail_silently, html_message):
         self.subject = subject
@@ -25,19 +26,21 @@ class EmailThread(threading.Thread):
         msg.send(self.fail_silently)
 
 
-# class GoogleCDNURL(FileSystemStorage):
-#     def url(self, name):
+class GoogleMediaFilesStorage(GoogleCloudStorage):
 
-#         '''
-#         @brief      for implementation of CDN using image field url
-#         @return     Dynamic return of CDN or local URL
-#         '''
+    def _save(self, name, content):
+        name = f'{settings.MEDIA_URL[1:]}{name}'
+        return super()._save(name, content)
 
-#         if settings.CDN_HOSTNAME:
-#             url = f'{settings.CDN_HOSTNAME}/{name}'
-#         else:
-#             url = f'{settings.MEDIA_URL}{name}'
-#         return url
+    def url(self, name):
+        """
+        @brief      for implementation of CDN using image field url
+        @return     Dynamic return of CDN or local URL
+        """
+        if settings.CDN_HOSTNAME:
+            url = f'{settings.CDN_HOSTNAME}/{name}'
+            return url
+        return super().url(name)
 
 
 class GoogleStaticFilesStorage(GoogleCloudStorage):
