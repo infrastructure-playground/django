@@ -80,7 +80,7 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -155,6 +155,7 @@ REST_FRAMEWORK = {
 
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=1),
+    # 'JWT_ALLOW_REFRESH': True,
 }
 
 
@@ -221,3 +222,7 @@ elif os.environ.get('ENV') == 'test':
     from .test_settings import *
 else:
     from .development_settings import *
+
+# Google Cloud Environments
+if os.environ.get('GAE_INSTANCE'):  # Google App Engine cloud deployment
+  from .gae_settings import *

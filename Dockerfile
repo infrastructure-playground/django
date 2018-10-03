@@ -1,4 +1,5 @@
-FROM infrastructureplayground/django:latest as project
+ARG CIRCLE_BRANCH
+FROM infrastructureplayground/django:$CIRCLE_BRANCH as project
 
 # using multi-staging with multiple copies to continuously keep the environment and avoid the maximum image layer error
 FROM python:3.6.4
@@ -21,6 +22,12 @@ RUN pip install -r requirements.txt
 
 # To copy existing migration files
 COPY --from=project /usr/src/app/. .
+
+ARG CDN_HOSTNAME
+ARG WHITELIST
+
+ENV CDN_HOSTNAME=${CDN_HOSTNAME}
+ENV WHITELIST=${WHITELIST}
 
 COPY . .
 RUN timeout 30 yes | python manage.py makemigrations
