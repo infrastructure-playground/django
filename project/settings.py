@@ -96,17 +96,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'project.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
@@ -230,3 +219,15 @@ else:
 # Google Cloud Environments
 if os.environ.get('GAE_INSTANCE'):  # Google App Engine cloud deployment
   from .gae_settings import *
+
+if os.environ.get('GKE'):
+  from .gke_settings import *
+
+
+if os.environ.get('TEST_DB_ENV'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
