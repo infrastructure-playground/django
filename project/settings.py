@@ -59,7 +59,7 @@ CORS_ORIGIN_WHITELIST = (
     'localhost'
 )
 
-if 'WHITELIST' in os.environ:
+if os.environ.get('WHITELIST'):
     whitelist = os.environ['WHITELIST']
     for host in whitelist.split(','):
         CORS_ORIGIN_WHITELIST += (host,)
@@ -221,6 +221,10 @@ if os.environ.get('ENV') == 'prod':
 elif os.environ.get('ENV') == 'test':
     from .test_settings import *
 else:
+    DEV_APPS = [
+        'drf_yasg',
+    ]
+    INSTALLED_APPS += DEV_APPS
     from .development_settings import *
 
 # Google Cloud Environments
