@@ -14,14 +14,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 import os
+
 from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include, re_path
+
 from rest_framework.permissions import AllowAny
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 from rest_framework.documentation import include_docs_urls
+
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+
+from utils.classes import GoogleEndpointSchemaGenerator
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,14 +41,17 @@ urlpatterns = [
 
 if settings.DEBUG:
     schema_view = get_schema_view(
-        openapi.Info(title="API Documentation",
-                     default_version='',
-                     description='',
-                     terms_of_service="#",
-                     contact=openapi.Contact(email="manila@unnotech.com"),
-                     license=openapi.License(name="BSD License"),),
-        url=f'http://{os.environ.get("OPENAPI_HOST")}',
+        openapi.Info(
+            title="API Documentation",
+            default_version='',
+            description='',
+            terms_of_service="#",
+            contact=openapi.Contact(email='manila@unnotech.com'),
+            license=openapi.License(name='BSD License'),
+        ),
+        f'http://{os.environ.get("OPENAPI_HOST")}',
         public=True,
+        generator_class=GoogleEndpointSchemaGenerator,
         permission_classes=(AllowAny,),
     )
     api_docs = [
