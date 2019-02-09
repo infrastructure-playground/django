@@ -21,7 +21,10 @@ celeryd.pid
 __pycache__/
 *.py[cod]
 *.class
-db.sqlite3
+swagger.yaml
 
 # media
 media/*
+
+# static
+static/*

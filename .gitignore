@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 *.class
+swagger.yaml
+
 # C extensions
 *.so
 
@@ -102,6 +104,9 @@ db.sqlite3
 
 # media
 media/*
+
+# static
+static/*
 
 # sensitive data
 codeship.aes

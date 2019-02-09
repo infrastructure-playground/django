@@ -49,6 +49,7 @@ INSTALLED_APPS += START_APPS
 THIRD_PARTY_APPS = [
     'rest_framework',
     'corsheaders',
+    'drf_yasg',
 ]
 INSTALLED_APPS += THIRD_PARTY_APPS
 
@@ -59,7 +60,7 @@ CORS_ORIGIN_WHITELIST = (
     'localhost'
 )
 
-if 'WHITELIST' in os.environ:
+if os.environ.get('WHITELIST'):
     whitelist = os.environ['WHITELIST']
     for host in whitelist.split(','):
         CORS_ORIGIN_WHITELIST += (host,)
@@ -94,17 +95,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'project.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
 
 # Password validation
@@ -226,3 +216,22 @@ else:
 # Google Cloud Environments
 if os.environ.get('GAE_INSTANCE'):  # Google App Engine cloud deployment
   from .gae_settings import *
+
+if os.environ.get('GKE'):
+  from .gke_settings import *
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
+
+# if os.environ.get('TEST_DB_ENV'):
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#         }
+#     }

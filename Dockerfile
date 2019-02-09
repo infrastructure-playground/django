@@ -1,4 +1,4 @@
-ARG CIRCLE_BRANCH
+ARG CIRCLE_BRANCH=master
 FROM infrastructureplayground/django:$CIRCLE_BRANCH as project
 
 # using multi-staging with multiple copies to continuously keep the environment and avoid the maximum image layer error
