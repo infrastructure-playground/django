@@ -59,11 +59,8 @@ jobs:
     steps:
       - checkout
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: echo $WHITELIST
       - run: >-
              docker build
-             --build-arg CDN_HOSTNAME=$CDN_HOSTNAME
-             --build-arg WHITELIST=$WHITELIST
              --build-arg CIRCLE_BRANCH=$CIRCLE_BRANCH
              --cache-from=infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
              -t infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
@@ -72,16 +69,21 @@ jobs:
   deploy_to_staging_static:
     parallelism: 1
     docker:
-      - image: google/cloud-sdk
+      - image: unnotech/cloud-sdk:python-3.6.5
         name: GCP
     steps:
       - checkout
-      - run: echo $STORAGE_BUCKETS_KEY > storage-buckets-key.json
-      - run: gcloud auth activate-service-account --key-file=storage-buckets-key.json
+      - run: echo $STORAGE_BUCKETS_KEY | base64 -d > storgeBucketsBackendServiceKey.json
+      - run: gcloud auth activate-service-account --key-file=storgeBucketsBackendServiceKey.json
       - run: apt-get install python3-pip -y
       - run: pip3 install -r requirements.txt
       - run: echo 'yes' | python3 manage.py collectstatic
-      - run: gsutil -m cp -r static/. gs://infrastructure-playground/static/
+      - run: >-
+             gsutil
+             -h "Cache-Control:public,max-age=$MAX_AGE"
+             -m cp -Z -a public-read  -r
+             static/.
+             gs://$PROJECT_ID-backend-sb/static/
   deploy_to_staging_code:
     parallelism: 1
     docker:
@@ -89,20 +91,50 @@ jobs:
       name: GCP
     steps:
       - checkout
-      - run: gcloud config set compute/region asia-east1
-      - run: gcloud config set project $PROJECT_ID
-      - run: echo $STORAGE_BUCKETS_KEY > storage-buckets-key.json
-      - run: gcloud auth activate-service-account --key-file=storage-buckets-key.json
-      - run: gsutil cp gs://infrastructure-playground-secrets/staging/secrets.json .
-      - run: gsutil cp gs://infrastructure-playground-secrets/staging/gae-key.json .
-      # export in circleci will not store variables in the next run
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
       - run: >-
-             export CLOUDSQL_HOST=`cat secrets.json |
-             python -c 'import json,sys;obj=json.load(sys.stdin);print(obj["CLOUDSQL_HOST"]);'`;
-             sed -i "s/CLOUD_SQL_CONNECTION_NAME/'$CLOUDSQL_HOST'/" app.yml
-      - run: sed -i "s/ARG CIRCLE_BRANCH/ARG CIRCLE_BRANCH=$CIRCLE_BRANCH/" Dockerfile
-      - run: gcloud auth activate-service-account --key-file=gae-key.json
-      - run: chmod u+x cloud_deploy.sh && ./cloud_deploy.sh
+             docker pull
+             infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
+      - run: gcloud config set project $PROJECT_ID
+      - run: echo $STORAGE_BUCKETS_KEY | base64 -d > storgeBucketsBackendServiceKey.json
+      - run: gcloud auth activate-service-account --key-file=storgeBucketsBackendServiceKey.json
+      - run: gsutil cp gs://$PROJECT_ID-secrets-sb/gkeDeployServiceKey .
+      - run: cat gkeDeployServiceKey | base64 -d > gkeDeployServiceKey.json
+      - run: gcloud auth activate-service-account --key-file=gkeDeployServiceKey.json
+      - run: gcloud config set compute/region asia-east2-a
+      - run: gcloud container clusters get-credentials $PROJECT_ID-gke-cluster0
+      - run: >-
+             docker_image=$(docker inspect --format='{{index .RepoDigests 0}}' infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH);
+             kubectl set image deployment $CIRCLE_PROJECT_REPONAME $CIRCLE_PROJECT_REPONAME=$docker_image --record;
+      - run: kubectl get pods
+  deploy_to_staging_api:
+    docker:
+      - image: google/cloud-sdk  # the first image is the environment where steps will be executed
+        name: GCP
+        environment:
+          DOCKERIZED: true
+    steps:
+      - checkout  # to pull the source code from repository
+      - setup_remote_docker:  # needed to connect container ports
+          docker_layer_caching: true
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: >-
+             docker run -d --entrypoint=""
+             --name=$CIRCLE_PROJECT_REPONAME
+             --env OPENAPI_HOST=$CIRCLE_PROJECT_REPONAME.endpoints.$PROJECT_ID.cloud.goog
+             infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
+             ping google.com
+      - run: docker exec -it $CIRCLE_PROJECT_REPONAME curl http://localhost:8000/swagger.yaml
+      - run: docker cp $CIRCLE_PROJECT_REPONAME:/usr/src/app/swagger.yaml .
+      - run: sed -i "s/\"'/\"/" swagger.yaml && sed -i "s/'\"/\"/" swagger.yaml
+      - run: echo $STORAGE_BUCKETS_KEY | base64 -d > storgeBucketsBackendServiceKey.json
+      - run: gcloud auth activate-service-account --key-file=storgeBucketsBackendServiceKey.json
+      - run: gsutil cp gs://$PROJECT_ID-secrets-sb/endpointDeployServiceKey .
+      - run: cat endpointDeployServiceKey | base64 -d > endpointDeployServiceKey.json
+      - run: gcloud auth activate-service-account --key-file=endpointDeployServiceKey.json
+      - run: gcloud endpoints services deploy swagger.yml
   deploy_to_production:
     machine: true
     steps:
