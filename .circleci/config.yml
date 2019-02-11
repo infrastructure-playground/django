@@ -102,7 +102,7 @@ jobs:
       - run: gcloud auth activate-service-account --key-file=storageBucketsBackendServiceKey.json
       - run: gsutil cp gs://$PROJECT_ID-secrets-sb/gkeDeployServiceKey.json .
       - run: gcloud auth activate-service-account --key-file=gkeDeployServiceKey.json
-      - run: gcloud config set compute/region asia-east2-a
+      - run: gcloud config set compute/zone asia-east2-a
       - run: gcloud container clusters get-credentials $PROJECT_ID-gke-cluster
       - run: >-
              docker_image=$(docker inspect --format='{{index .RepoDigests 0}}' infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH);
@@ -123,9 +123,11 @@ jobs:
              docker run -d
              --name=$CIRCLE_PROJECT_REPONAME
              --env OPENAPI_HOST=$CIRCLE_PROJECT_REPONAME.endpoints.$PROJECT_ID.cloud.goog
+             --name $CIRCLE_PROJECT_REPONAME
+             --p 8000:8000
              infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
              ping google.com
-      - run: docker exec -it $CIRCLE_PROJECT_REPONAME curl http://localhost:8000/swagger.yaml
+      - run: docker exec -it $CIRCLE_PROJECT_REPONAME curl http://$CIRCLE_PROJECT_REPONAME:8000/swagger.yaml
       - run: docker cp $CIRCLE_PROJECT_REPONAME:/usr/src/app/swagger.yaml .
       - run: sed -i "s/\"'/\"/" swagger.yaml && sed -i "s/'\"/\"/" swagger.yaml
       - run: echo $STORAGE_BUCKETS_KEY > storageBucketsBackendServiceKey.json
