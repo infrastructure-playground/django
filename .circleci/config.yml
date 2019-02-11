@@ -73,8 +73,8 @@ jobs:
         name: GCP
     steps:
       - checkout
-      - run: echo $STORAGE_BUCKETS_KEY > storgeBucketsBackendServiceKey.json
-      - run: gcloud auth activate-service-account --key-file=storgeBucketsBackendServiceKey.json
+      - run: echo $STORAGE_BUCKETS_KEY > storageBucketsBackendServiceKey.json
+      - run: gcloud auth activate-service-account --key-file=storageBucketsBackendServiceKey.json
       - run: apt-get install python3-pip -y
       - run: pip3 install -r requirements.txt
       - run: echo 'yes' | python3 manage.py collectstatic
@@ -98,8 +98,8 @@ jobs:
              docker pull
              infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
       - run: gcloud config set project $PROJECT_ID
-      - run: echo $STORAGE_BUCKETS_KEY > storgeBucketsBackendServiceKey.json
-      - run: gcloud auth activate-service-account --key-file=storgeBucketsBackendServiceKey.json
+      - run: echo $STORAGE_BUCKETS_KEY > storageBucketsBackendServiceKey.json
+      - run: gcloud auth activate-service-account --key-file=storageBucketsBackendServiceKey.json
       - run: gsutil cp gs://$PROJECT_ID-secrets-sb/gkeDeployServiceKey.json .
       - run: gcloud auth activate-service-account --key-file=gkeDeployServiceKey.json
       - run: gcloud config set compute/region asia-east2-a
@@ -128,8 +128,8 @@ jobs:
       - run: docker exec -it $CIRCLE_PROJECT_REPONAME curl http://localhost:8000/swagger.yaml
       - run: docker cp $CIRCLE_PROJECT_REPONAME:/usr/src/app/swagger.yaml .
       - run: sed -i "s/\"'/\"/" swagger.yaml && sed -i "s/'\"/\"/" swagger.yaml
-      - run: echo $STORAGE_BUCKETS_KEY > storgeBucketsBackendServiceKey.json
-      - run: gcloud auth activate-service-account --key-file=storgeBucketsBackendServiceKey.json
+      - run: echo $STORAGE_BUCKETS_KEY > storageBucketsBackendServiceKey.json
+      - run: gcloud auth activate-service-account --key-file=storageBucketsBackendServiceKey.json
       - run: gsutil cp gs://$PROJECT_ID-secrets-sb/endpointDeployServiceKey.json .
       - run: gcloud auth activate-service-account --key-file=endpointDeployServiceKey.json
       - run: gcloud endpoints services deploy swagger.yml
@@ -176,6 +176,13 @@ workflows:
               only:
                 - master
       - deploy_to_staging_code:
+          requires:
+            - push_docker_image
+          filters:
+            branches:
+              only:
+              - master
+      - deploy_to_staging_api:
           requires:
             - push_docker_image
           filters:
