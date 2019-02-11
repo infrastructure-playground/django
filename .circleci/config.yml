@@ -126,8 +126,10 @@ jobs:
              --name $CIRCLE_PROJECT_REPONAME
              -p 8000:8000
              infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
-      - run: docker exec -it $CIRCLE_PROJECT_REPONAME wget http://localhost:8000/swagger.yaml && sed -i "s/\"'/\"/" swagger.yaml && sed -i "s/'\"/\"/" swagger.yaml
+      - run: docker exec -it $CIRCLE_PROJECT_REPONAME wget http://localhost:8000/swagger.yaml
       - run: docker cp $CIRCLE_PROJECT_REPONAME:/usr/src/app/swagger.yaml .
+      - run: sed -i "s/\"'/\"/" swagger.yaml && sed -i "s/'\"/\"/" swagger.yaml
+      - run: sed -i "s/\/:/:/" swagger.yaml
       - run: echo $STORAGE_BUCKETS_KEY > storageBucketsBackendServiceKey.json
       - run: gcloud auth activate-service-account --key-file=storageBucketsBackendServiceKey.json
       - run: gsutil cp gs://$PROJECT_ID-secrets-sb/endpointDeployServiceKey.json .
