@@ -124,7 +124,7 @@ jobs:
              --name=$CIRCLE_PROJECT_REPONAME
              --env OPENAPI_HOST=$CIRCLE_PROJECT_REPONAME.endpoints.$PROJECT_ID.cloud.goog
              --name $CIRCLE_PROJECT_REPONAME
-             --p 8000:8000
+             -p 8000:8000
              infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
              ping google.com
       - run: docker exec -it $CIRCLE_PROJECT_REPONAME curl http://$CIRCLE_PROJECT_REPONAME:8000/swagger.yaml
