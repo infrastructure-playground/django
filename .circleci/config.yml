@@ -133,7 +133,7 @@ jobs:
       - run: gcloud auth activate-service-account --key-file=storageBucketsBackendServiceKey.json
       - run: gsutil cp gs://$PROJECT_ID-secrets-sb/endpointDeployServiceKey.json .
       - run: gcloud auth activate-service-account --key-file=endpointDeployServiceKey.json
-      - run: gcloud endpoints services deploy swagger.yml
+      - run: gcloud endpoints services deploy swagger.yaml
   deploy_to_production:
     machine: true
     steps:
