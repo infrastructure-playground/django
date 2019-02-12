@@ -23,15 +23,7 @@ RUN pip install -r requirements.txt
 # To copy existing migration files
 COPY --from=project /usr/src/app/. .
 
-ARG CDN_HOSTNAME
-ARG WHITELIST
-
-ENV CDN_HOSTNAME=${CDN_HOSTNAME}
-ENV WHITELIST=${WHITELIST}
-
 COPY . .
 RUN timeout 30 yes | python manage.py makemigrations
-
-COPY --from=g-sdk /debugger .
 
 ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
