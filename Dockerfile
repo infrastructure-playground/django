@@ -1,11 +1,6 @@
 ARG CIRCLE_BRANCH=master
 FROM infrastructureplayground/django:$CIRCLE_BRANCH as project
 
-FROM google/cloud-sdk as g-sdk
-WORKDIR /debugger
-COPY .git .git
-RUN gcloud debug source gen-repo-info-file
-
 # using multi-staging with multiple copies to continuously keep the environment and avoid the maximum image layer error
 FROM python:3.6.4
 WORKDIR /usr/src/app
