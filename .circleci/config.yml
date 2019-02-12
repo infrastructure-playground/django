@@ -111,7 +111,7 @@ jobs:
       - run: gcloud container clusters get-credentials $PROJECT_ID-gke-cluster
       - run: >-
              docker_image=$(docker inspect --format='{{index .RepoDigests 0}}' infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH);
-             kubectl set image deployment django-backend $CIRCLE_PROJECT_REPONAME=$docker_image --record;
+             kubectl set image deployment $CIRCLE_PROJECT_REPONAME-backend $CIRCLE_PROJECT_REPONAME-backend=$docker_image --record;
       - run: kubectl get pods
   deploy_to_staging_api:
     docker:
