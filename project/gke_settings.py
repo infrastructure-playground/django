@@ -2,12 +2,14 @@ import os
 import json
 from google.oauth2 import service_account
 
+SB_SA_FILE = os.environ.get('STORAGE_BUCKETS_FILE',
+                            'storageBucketsBackendServiceKey.json')
 STATICFILES_STORAGE = 'utils.classes.GoogleStaticFilesStorage'  # static
 DEFAULT_FILE_STORAGE = 'utils.classes.GoogleMediaFilesStorage'  # media
 GS_AUTO_CREATE_BUCKET = True
 GS_DEFAULT_ACL = 'publicRead'
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    '/usr/src/app/storage-buckets-key.json'
+    f'/usr/src/app/{SB_SA_FILE}'
 )
 GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME')
 
