@@ -13,6 +13,16 @@ GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
 )
 GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME')
 
+try:
+    import googleclouddebugger
+    googleclouddebugger.enable(module='django',
+                               version=os.environ.get('ENV', 'master'))
+    print('worked debugger on try')
+    # Will work upon GKE deployment
+except:
+    print('cloud debugger execption')
+    pass
+
 # with open('/usr/src/app/django_email.json') as data_file:  # required for error notification
 #     data = json.load(data_file)
 #     EMAIL_HOST = data['EMAIL_HOST']
