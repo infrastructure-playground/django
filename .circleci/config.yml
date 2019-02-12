@@ -55,9 +55,14 @@ jobs:
       - run: python manage.py migrate
       - run: python manage.py test inventory.tests.BooksTest
   push_docker_image:
-    machine: true
+    docker:
+      - image: google/cloud-sdk
+        name: GCP
     steps:
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run: gcloud debug source gen-repo-info-file
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
       - run: >-
              docker build
@@ -106,7 +111,7 @@ jobs:
       - run: gcloud container clusters get-credentials $PROJECT_ID-gke-cluster
       - run: >-
              docker_image=$(docker inspect --format='{{index .RepoDigests 0}}' infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH);
-             kubectl set image deployment esp-echo $CIRCLE_PROJECT_REPONAME=$docker_image --record;
+             kubectl set image deployment $CIRCLE_PROJECT_REPONAME-backend $CIRCLE_PROJECT_REPONAME-backend=$docker_image --record;
       - run: kubectl get pods
   deploy_to_staging_api:
     docker:
