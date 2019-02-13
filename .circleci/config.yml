@@ -80,7 +80,6 @@ jobs:
       - checkout
       - run: echo $STORAGE_BUCKETS_KEY > storageBucketsBackendServiceKey.json
       - run: gcloud auth activate-service-account --key-file=storageBucketsBackendServiceKey.json
-      - run: apt-get install python3-pip -y
       - run: pip3 install -r requirements.txt
       - run: echo 'yes' | python3 manage.py collectstatic
       - run: >-
