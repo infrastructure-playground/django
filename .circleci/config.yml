@@ -108,6 +108,10 @@ workflows:
   pipeline:
     jobs:
       - push_docker_image:
+        filters:
+          branches:
+            only:
+              - master
       - deploy_to_staging_static:
           requires:
             - push_docker_image
