@@ -34,7 +34,7 @@ install:
 jobs:
   include:
     - stage: Authentication Unit Testing
-      script: docker exec -it django python manage.py test authentication.tests.RegistrationTest
-    - script: docker exec -it django python manage.py test authentication.tests.LoginTest
+      script: docker exec -it django python manage.py test authentication.tests.test_register
+    - script: docker exec -it django python manage.py test authentication.tests.test_login
     - stage: Inventory Unit Testing
       script: docker exec -it django python manage.py test inventory.tests.BooksTest
