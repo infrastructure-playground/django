@@ -2,7 +2,7 @@ from functools import partial
 from rest_framework import status
 from django.urls import reverse
 from .models import Book
-from authentication.tests import SetLogin
+from authentication.tests.test_login import SetLogin
 
 name = 'My Life'
 description = 'Just another sample'

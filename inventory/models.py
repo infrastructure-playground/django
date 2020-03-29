@@ -23,6 +23,9 @@ class Book(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['-id',]
+
 
 # @receiver(post_save, sender=Book)
 # def book_follow_up(sender, instance, created, **kwargs):
