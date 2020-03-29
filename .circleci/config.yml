@@ -47,10 +47,6 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: >-
-             docker pull
-             infrastructureplayground/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
       - run: gcloud config set project $PROJECT_ID
       - run: echo $STORAGE_BUCKETS_KEY > storageBucketsBackendServiceKey.json
       - run: gcloud auth activate-service-account --key-file=storageBucketsBackendServiceKey.json
@@ -62,7 +58,7 @@ jobs:
           at: workspace
       - run: >-
              docker_image=$(cat workspace/image_sha);
-             kubectl set image deployment $CIRCLE_PROJECT_REPONAME $CIRCLE_PROJECT_REPONAME=$docker_image --record
+             kubectl set image deployment $CIRCLE_PROJECT_REPONAME-backend $CIRCLE_PROJECT_REPONAME-backend=$docker_image --record
       - run: kubectl get pods
   deploy_to_api:
     docker:
