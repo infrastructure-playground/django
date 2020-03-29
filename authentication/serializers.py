@@ -1,7 +1,10 @@
+
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 
 from django.contrib.auth.models import User
+
+from utils import constants
 
 
 class AccountSerializer(serializers.ModelSerializer):
@@ -26,8 +29,9 @@ class AccountSerializer(serializers.ModelSerializer):
         """
         @brief      account registration logic.
         """
-        if validated_data['password'] != validated_data['confirm_password']:
-            raise serializers.ValidationError({'error': 'Passwords must match'})
+        confirm_password = validated_data.get('confirm_password')
+        if not confirm_password or validated_data['password'] != confirm_password:
+            raise serializers.ValidationError({'error': constants.PASSWORD_CONFIRMATION})
         else:
             del validated_data['confirm_password']
         account = User.objects.create_user(**validated_data)

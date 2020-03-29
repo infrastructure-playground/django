@@ -12,6 +12,8 @@ from . serializers import AccountSerializer
 
 from django.contrib.auth.models import User
 
+from utils import constants
+
 
 class AccountRegistration(generics.CreateAPIView):
     """
@@ -35,7 +37,7 @@ class AccountLogin(generics.CreateAPIView):
         """
         account = authenticate(**request.data)
         if not account:
-            raise serializers.ValidationError({'error': 'Incorrect Username or Password'})
+            raise serializers.ValidationError({'error': constants.AUTH_ERROR})
         pre_payload = api_settings.JWT_PAYLOAD_HANDLER(account)
         token = api_settings.JWT_ENCODE_HANDLER(pre_payload)
         token = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER(token)
