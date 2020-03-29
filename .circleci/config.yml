@@ -108,7 +108,7 @@ workflows:
             branches:
               only:
                 - master
-      - deploy_to_staging_static:
+      - deploy_to_static:
           requires:
             - push_docker_image
           filters:
