@@ -50,6 +50,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'corsheaders',
     'drf_yasg',
+    'django_filters'
 ]
 INSTALLED_APPS += THIRD_PARTY_APPS
 
@@ -220,12 +221,12 @@ if os.environ.get('GAE_INSTANCE'):  # Google App Engine cloud deployment
 if os.environ.get('GKE'):
   from .gke_settings import *
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 
 # if os.environ.get('TEST_DB_ENV'):

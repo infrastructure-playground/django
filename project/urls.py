@@ -27,13 +27,14 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 from utils.classes import GoogleEndpointSchemaGenerator
-from utils.apis import uptime, health_check
+from utils.apis import uptime, health_check, delete_test_registered_user
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('uptime/', uptime),
     path('healthcheck/', health_check),
+    path('delete-test-registered-user/', delete_test_registered_user),
     # path(r'api-token-auth/', obtain_jwt_token),
     path('api-token-refresh/', refresh_jwt_token),
     re_path(r'^v1/authentication/',
