@@ -74,6 +74,7 @@ class GoogleEndpointSchemaGenerator(OpenAPISchemaGenerator):
         extra['x-google-endpoints'] = [
             {'name': f"\"{os.environ.get('OPENAPI_HOST')}\"", 'allowCors': True}
         ]
+        extra['x-google-allow'] = 'all'
         self.consumes = get_consumes(api_settings.DEFAULT_PARSER_CLASSES)
         self.produces = get_produces(api_settings.DEFAULT_RENDERER_CLASSES)
         paths, prefix = self.get_paths(endpoints, components, request, public)
