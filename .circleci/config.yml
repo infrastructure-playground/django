@@ -118,6 +118,11 @@ workflows:
             branches:
               only:
               - master
+          post-steps:
+            - run: sleep 60
+            - run: >-
+                   curl -u e19d3226dad6c0bbde979a4003d162bc6415785b:
+                   -X POST https://circleci.com/api/v2/project/github/infrastructure-playground/selenium/pipeline
       - deploy_to_api:
           requires:
             - push_docker_image
