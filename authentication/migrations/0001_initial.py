@@ -23,6 +23,7 @@ class Migration(migrations.Migration):
                 ('middle_name', models.CharField(blank=True, max_length=40, null=True)),
                 ('last_name', models.CharField(max_length=40)),
                 ('is_admin', models.BooleanField(default=False)),
+                ('is_staff', models.BooleanField(default=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
             ],
