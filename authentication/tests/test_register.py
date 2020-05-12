@@ -16,8 +16,9 @@ class RegistrationTest(APITestCase):
         Get requests not allowed
         """
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code,
-                         status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(
+            response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED
+        )
 
     def test_no_username(self):
         """
@@ -26,7 +27,9 @@ class RegistrationTest(APITestCase):
         # Remove the username field in the request
         _registration_data = registration_data.copy()
         del _registration_data['username']
-        response = self.client.post(self.url, _registration_data, format='json')
+        response = self.client.post(
+            self.url, _registration_data, format='json'
+        )
         # Status Code returned by the API must be 400
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # A response message of “This field is required” on username key
@@ -39,7 +42,9 @@ class RegistrationTest(APITestCase):
         # Remove the password field in the request
         _registration_data = registration_data.copy()
         del _registration_data['password']
-        response = self.client.post(self.url, _registration_data, format='json')
+        response = self.client.post(
+            self.url, _registration_data, format='json'
+        )
         # Status Code returned by the API must be 400
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # A response message of “This field is required” on password key
@@ -52,11 +57,15 @@ class RegistrationTest(APITestCase):
         # Remove the password field in the request
         _registration_data = registration_data.copy()
         del _registration_data['confirm_password']
-        response = self.client.post(self.url, _registration_data, format='json')
+        response = self.client.post(
+            self.url, _registration_data, format='json'
+        )
         # Status Code returned by the API must be 400
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # A response message of “This field is required” on confirm_password key
-        self.assertIn(constants.PASSWORD_CONFIRMATION, response.json()['error'])
+        self.assertIn(
+            constants.PASSWORD_CONFIRMATION, response.json()['error']
+        )
 
     def test_diff_password_confirmation(self):
         """
@@ -65,11 +74,15 @@ class RegistrationTest(APITestCase):
         # Remove the password field in the request
         _registration_data = registration_data.copy()
         _registration_data['confirm_password'] = 'pass5678'
-        response = self.client.post(self.url, _registration_data, format='json')
+        response = self.client.post(
+            self.url, _registration_data, format='json'
+        )
         # Status Code returned by the API must be 400
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # A response message of “This field is required” on confirm_password key
-        self.assertIn(constants.PASSWORD_CONFIRMATION, response.json()['error'])
+        self.assertIn(
+            constants.PASSWORD_CONFIRMATION, response.json()['error']
+        )
 
     def test_register(self):
         """
@@ -95,4 +108,6 @@ class RegistrationTest(APITestCase):
         response = self.client.post(self.url, registration_data, format='json')
         # Status Code returned by the API must be 400
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('username already exists', response.json()['username'][0])
+        self.assertIn(
+            'username already exists', response.json()['username'][0]
+        )
