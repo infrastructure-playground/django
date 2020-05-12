@@ -1,7 +1,9 @@
-import time
-from django.db import models, transaction
-from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db import models
+
+# import time
+# from django.db import models, transaction
+# from django.dispatch import receiver
+# from django.db.models.signals import post_save
 
 
 # Create your models here.
@@ -24,7 +26,9 @@ class Book(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['-id',]
+        ordering = [
+            '-id',
+        ]
 
 
 # @receiver(post_save, sender=Book)

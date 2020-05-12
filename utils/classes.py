@@ -18,8 +18,16 @@ class EmailThread(threading.Thread):
     """
     @brief      Avoids the usual delay on the backend when sending an e-mail
     """
-    def __init__(self, subject, body, from_email, recipient_list,
-                 fail_silently, html_message):
+
+    def __init__(  # pylint: disable=too-many-arguments
+        self,
+        subject,
+        body,
+        from_email,
+        recipient_list,
+        fail_silently,
+        html_message,
+    ):
         self.subject = subject
         self.body = body
         self.recipient_list = recipient_list
@@ -29,15 +37,15 @@ class EmailThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        msg = EmailMultiAlternatives(self.subject, self.body, self.from_email,
-                                     self.recipient_list)
+        msg = EmailMultiAlternatives(
+            self.subject, self.body, self.from_email, self.recipient_list
+        )
         if self.html_message:
             msg.attach_alternative(self.html_message, "text/html")
         msg.send(self.fail_silently)
 
 
 class GoogleMediaFilesStorage(GoogleCloudStorage):
-
     def _save(self, name, content):
         name = f'{settings.MEDIA_URL[1:]}{name}'
         return super()._save(name, content)
@@ -64,6 +72,7 @@ class GoogleEndpointSchemaGenerator(OpenAPISchemaGenerator):
     Custom generator for compatibility w/ Google Cloud Endpoints format.
     Preferably CORS
     """
+
     def get_schema(self, request=None, public=False):
         """
         allow CORS in Google Cloud Endpoint
@@ -72,7 +81,10 @@ class GoogleEndpointSchemaGenerator(OpenAPISchemaGenerator):
         components = ReferenceResolver(openapi.SCHEMA_DEFINITIONS)
         extra = dict(components)
         extra['x-google-endpoints'] = [
-            {'name': f"\"{os.environ.get('OPENAPI_HOST')}\"", 'allowCors': True}
+            {
+                'name': f"\"{os.environ.get('OPENAPI_HOST')}\"",
+                'allowCors': True,
+            }
         ]
         extra['x-google-allow'] = 'all'
         self.consumes = get_consumes(api_settings.DEFAULT_PARSER_CLASSES)
@@ -82,7 +94,8 @@ class GoogleEndpointSchemaGenerator(OpenAPISchemaGenerator):
         security_definitions = self.get_security_definitions()
         if security_definitions:
             security_requirements = self.get_security_requirements(
-                security_definitions)
+                security_definitions
+            )
         else:
             security_requirements = None
 
@@ -91,9 +104,14 @@ class GoogleEndpointSchemaGenerator(OpenAPISchemaGenerator):
             url = request.build_absolute_uri()
 
         return openapi.Swagger(
-            info=self.info, paths=paths, consumes=self.consumes or None,
+            info=self.info,
+            paths=paths,
+            consumes=self.consumes or None,
             produces=self.produces or None,
             security_definitions=security_definitions,
             security=security_requirements,
-            _url=url, _prefix=prefix, _version=self.version, **extra,
+            _url=url,
+            _prefix=prefix,
+            _version=self.version,
+            **extra,
         )

@@ -1,2 +1,2 @@
-AUTH_ERROR = 'Incorrect Username or Password'
-PASSWORD_CONFIRMATION = 'Passwords must match'
+ERROR_AUTH = 'Incorrect Username or Password'
+ERROR_PASSWORD_CONFIRMATION = 'Passwords must match'  # noqa

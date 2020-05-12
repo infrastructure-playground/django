@@ -1,9 +1,11 @@
 import os
-import json
 from google.oauth2 import service_account
 
-SB_SA_FILE = os.environ.get('STORAGE_BUCKETS_FILE',
-                            'storageBucketsBackendServiceKey.json')
+# import json
+
+SB_SA_FILE = os.environ.get(
+    'STORAGE_BUCKETS_FILE', 'storageBucketsBackendServiceKey.json'
+)
 STATICFILES_STORAGE = 'utils.classes.GoogleStaticFilesStorage'  # static
 DEFAULT_FILE_STORAGE = 'utils.classes.GoogleMediaFilesStorage'  # media
 GS_AUTO_CREATE_BUCKET = True
@@ -15,13 +17,14 @@ GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME')
 
 try:
     import googleclouddebugger
-    googleclouddebugger.enable(module='django',
-                               version=os.environ.get('ENV', 'master'))
+
+    googleclouddebugger.enable(
+        module='django', version=os.environ.get('ENV', 'master')
+    )
     print('worked debugger on try')
     # Will work upon GKE deployment
-except:
+except ImportError:
     print('cloud debugger execption')
-    pass
 
 # with open('/usr/src/app/django_email.json') as data_file:  # required for error notification
 #     data = json.load(data_file)

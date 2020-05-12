@@ -1,5 +1,6 @@
 import os
-import multiprocessing
+
+# import multiprocessing
 
 if os.environ.get('GAE_INSTANCE'):
     bind = '0.0.0.0:8080'
@@ -15,6 +16,13 @@ accesslog = '-'
 workers = 1
 preload = True
 reload = True
-worker_class = 'gevent'  # async type worker, so the app can handle a stream of requests in parallel
+# 'gevent' async type worker,
+# so the app can handle a stream of requests in parallel
+worker_class = 'gevent'
 keepalive = 60
-access_log_format = '{Client-IP: %({X-Real-IP}i)s, Request-time: %(L)s, Request-date: %(t)s, HTTP-Status: "%(r)s", HTTP-Status-Code: %(s)s, Response-length: %(b)s, Http-Referrer: %(f)s, User-Agent: %(a)s}'
+access_log_format = (
+    '{Client-IP: %({X-Real-IP}i)s, Request-time: %(L)s, '
+    'Request-date: %(t)s, HTTP-Status: "%(r)s", '
+    'HTTP-Status-Code: %(s)s, Response-length: %(b)s, '
+    'Http-Referrer: %(f)s, User-Agent: %(a)s}'
+)

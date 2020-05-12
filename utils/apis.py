@@ -21,12 +21,12 @@ def health_check(request):
     """
     return Response({"message": "Health Check Ok"})
 
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def delete_test_registered_user(request):
     user = User.objects.filter(username=f"UI_{request.GET['platform']}_test")
-    if(user.exists()):
+    if user.exists():
         user.delete()
         return Response({"message": "Delete Test Registered User Success"})
-    else:
-        return Response({"message": "User does not exist yet"})
+    return Response({"message": "User does not exist yet"})

@@ -51,3 +51,5 @@ jobs:
               manage.py test inventory.tests.BooksTest
               &&
               docker exec -it django coverage report
+    - stage: Static Code Analysis
+      script: docker exec -it django prospector
