@@ -20,7 +20,9 @@ from django.conf import settings
 from django.urls import path, include, re_path
 
 from rest_framework.permissions import AllowAny
-from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
+
+# from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
+from rest_framework_jwt.views import refresh_jwt_token
 from rest_framework.documentation import include_docs_urls
 
 from drf_yasg.views import get_schema_view
@@ -29,7 +31,6 @@ from drf_yasg import openapi
 from utils.classes import GoogleEndpointSchemaGenerator
 from utils.apis import uptime, health_check, delete_test_registered_user
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('uptime/', uptime),
@@ -37,19 +38,22 @@ urlpatterns = [
     path('delete-test-registered-user/', delete_test_registered_user),
     # path(r'api-token-auth/', obtain_jwt_token),
     path('api-token-refresh/', refresh_jwt_token),
-    re_path(r'^v1/authentication/',
-            include('authentication.urls', namespace='authentication')),
-    re_path(r'^v1/inventory/',
-            include('inventory.urls', namespace='inventory')),
+    re_path(
+        r'^v1/authentication/',
+        include('authentication.urls', namespace='authentication'),
+    ),
+    re_path(
+        r'^v1/inventory/', include('inventory.urls', namespace='inventory')
+    ),
 ]
 
 if settings.DEBUG:
     schema_view = get_schema_view(
         openapi.Info(
-            title="API Documentation",
+            title='API Documentation',
             default_version='',
             description='',
-            terms_of_service="#",
+            terms_of_service='#',
             contact=openapi.Contact(email='manila@unnotech.com'),
             license=openapi.License(name='BSD License'),
         ),
@@ -59,17 +63,26 @@ if settings.DEBUG:
         permission_classes=(AllowAny,),
     )
     api_docs = [
-        path('docs/',
-             include_docs_urls(title='API Docs',
-                               permission_classes=(AllowAny,))),
-        re_path(r'^swagger(?P<format>\.json|\.yaml)$',
-                schema_view.without_ui(cache_timeout=0),
-                name='schema-json'),
-        re_path(r'^swagger/$',
-                schema_view.with_ui('swagger', cache_timeout=0),
-                name='schema-swagger-ui'),
-        re_path(r'^redoc/$',
-                schema_view.with_ui('redoc', cache_timeout=0),
-                name='schema-redoc')
+        path(
+            'docs/',
+            include_docs_urls(
+                title='API Docs', permission_classes=(AllowAny,)
+            ),
+        ),
+        re_path(
+            r'^swagger(?P<format>\.json|\.yaml)$',
+            schema_view.without_ui(cache_timeout=0),
+            name='schema-json',
+        ),
+        re_path(
+            r'^swagger/$',
+            schema_view.with_ui('swagger', cache_timeout=0),
+            name='schema-swagger-ui',
+        ),
+        re_path(
+            r'^redoc/$',
+            schema_view.with_ui('redoc', cache_timeout=0),
+            name='schema-redoc',
+        ),
     ]
     urlpatterns += api_docs
