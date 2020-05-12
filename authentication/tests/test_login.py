@@ -18,8 +18,9 @@ class LoginTest(APITestCase):
         Get requests not allowed
         """
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code,
-                         status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(
+            response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED
+        )
 
     def test_no_username(self):
         """
@@ -29,11 +30,13 @@ class LoginTest(APITestCase):
         _login_credentials = login_credentials.copy()
         del _login_credentials['username']
         # Client sends a POST request with the credentials
-        response = self.client.post(self.url, _login_credentials, format='json')
+        response = self.client.post(
+            self.url, _login_credentials, format='json'
+        )
         # Status Code returned by the API must be 400
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # An error response message is expected
-        self.assertIn(constants.AUTH_ERROR, response.json()['error'])
+        self.assertIn(constants.ERROR_AUTH, response.json()['error'])
 
     def test_no_password(self):
         """
@@ -43,11 +46,13 @@ class LoginTest(APITestCase):
         _login_credentials = login_credentials.copy()
         del _login_credentials['password']
         # Client sends a POST request with the credentials
-        response = self.client.post(self.url, _login_credentials, format='json')
+        response = self.client.post(
+            self.url, _login_credentials, format='json'
+        )
         # Status Code returned by the API must be 400
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # An error response message is expected
-        self.assertIn(constants.AUTH_ERROR, response.json()['error'])
+        self.assertIn(constants.ERROR_AUTH, response.json()['error'])
 
     def test_login(self):
         """
@@ -66,24 +71,25 @@ class LoginTest(APITestCase):
         Login the user
         """
         _login_credentials = login_credentials.copy()
-        _login_credentials['password'] =  'pass5678'
+        _login_credentials['password'] = 'pass5678'
         # Client sends a POST request with the credentials
-        response = self.client.post(self.url, _login_credentials, format='json')
+        response = self.client.post(
+            self.url, _login_credentials, format='json'
+        )
         # Status Code returned by the API must be 400
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # An error response message is expected
-        self.assertIn(constants.AUTH_ERROR, response.json()['error'])
+        self.assertIn(constants.ERROR_AUTH, response.json()['error'])
 
 
 class SetLogin(APITestCase):
-
     def setUp(self):
         """
         Login the user
         """
         User.objects.create_user(**create_user_data)
-        response = self.client.post(LoginTest.url,
-                                    login_credentials,
-                                    format='json')
+        response = self.client.post(
+            LoginTest.url, login_credentials, format='json'
+        )
         token = response.data['token']
         return token

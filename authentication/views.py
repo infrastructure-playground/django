@@ -8,7 +8,7 @@ from rest_framework import generics, mixins, viewsets
 
 from rest_framework_jwt.settings import api_settings
 
-from . serializers import AccountSerializer
+from .serializers import AccountSerializer
 
 from django.contrib.auth.models import User
 
@@ -19,39 +19,44 @@ class AccountRegistration(generics.CreateAPIView):
     """
     @brief      Class for registration.
     """
+
     serializer_class = AccountSerializer
-    permission_classes = (AllowAny, )
+    permission_classes = (AllowAny,)
 
 
 class AccountLogin(generics.CreateAPIView):
     """
     @brief      Class for logging-in.
     """
-    serializer_class = AccountSerializer
-    permission_classes = (AllowAny, )
 
-    def create(self, request):
+    serializer_class = AccountSerializer
+    permission_classes = (AllowAny,)
+
+    def create(self, request, *args, **kwargs):
         """
         :param request: {'username': 'armadadean', 'password': 'pass1234'}
         :return:  {'token': 'abcdef123456'}
         """
         account = authenticate(**request.data)
         if not account:
-            raise serializers.ValidationError({'error': constants.AUTH_ERROR})
+            raise serializers.ValidationError({'error': constants.ERROR_AUTH})
         pre_payload = api_settings.JWT_PAYLOAD_HANDLER(account)
         token = api_settings.JWT_ENCODE_HANDLER(pre_payload)
         token = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER(token)
         return Response(token)
 
 
-class AccountViewSet(mixins.ListModelMixin,
-                     mixins.RetrieveModelMixin,
-                     mixins.UpdateModelMixin,
-                     mixins.DestroyModelMixin,
-                     viewsets.GenericViewSet):
+class AccountViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
     """
     @brief      Class for registration.
     """
+
     queryset = User.objects.all()
     serializer_class = AccountSerializer
-    permission_classes = (AllowAny, )
+    permission_classes = (AllowAny,)

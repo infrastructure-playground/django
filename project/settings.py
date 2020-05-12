@@ -50,16 +50,12 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'corsheaders',
     'drf_yasg',
-    'django_filters'
+    'django_filters',
 ]
 INSTALLED_APPS += THIRD_PARTY_APPS
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = (
-    '127.0.0.1:4200',
-    'localhost:4200',
-    'localhost'
-)
+CORS_ORIGIN_WHITELIST = ('127.0.0.1:4200', 'localhost:4200', 'localhost')
 
 if os.environ.get('WHITELIST'):
     whitelist = os.environ['WHITELIST']
@@ -139,9 +135,7 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    )
+    'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.JSONRenderer',),
 }
 
 JWT_AUTH = {
@@ -161,65 +155,66 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 LOGGING = {
-           'version': 1,
-           'disable_existing_loggers': False,
-           'formatters': {
-               'verbose': {
-                   'format': '[%(asctime)s][%(name)s:%(lineno)s][%(levelname)s] %(message)s',
-                   'datefmt': '%Y/%b/%d %H:%M:%S'
-               },
-               'colored': {'()': 'colorlog.ColoredFormatter',
-                           'format': '[%(log_color)s%(asctime)s%(reset)s][%(name)s:%(lineno)s][%(log_color)s%(levelname)s%(reset)s] %(message)s',
-                           'datefmt': '%Y/%b/%d %H:%M:%S',
-                           'log_colors': {'DEBUG': 'cyan',
-                                          'INFO': 'green',
-                                          'WARNING': 'bold_yellow',
-                                          'ERROR': 'red',
-                                          'CRITICAL': 'red,bg_white'},
-                           'secondary_log_colors': {},
-                           'style': '%'},
-           },
-           'handlers': {
-               'console': {
-                   'level': 'DEBUG',
-                   'class': 'logging.StreamHandler',
-                   'formatter': 'colored'
-               },
-               'mail_admins': {
-                   'level': 'ERROR',
-                   'class': 'django.utils.log.AdminEmailHandler',
-               },
-           },
-           'loggers': {
-               'django': {
-                   'handlers': ['console'],
-                   'propagate': True,
-               },
-               'django.request': {
-                   'handlers': ['mail_admins'],
-                   'level': 'ERROR',
-               },
-           }
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': (
+                '[%(asctime)s][%(name)s:%(lineno)s]'
+                '[%(levelname)s] %(message)s'
+            ),
+            'datefmt': '%Y/%b/%d %H:%M:%S',
+        },
+        'colored': {
+            '()': 'colorlog.ColoredFormatter',
+            'format': (
+                '[%(log_color)s%(asctime)s%(reset)s][%(name)s:%(lineno)s]'
+                '[%(log_color)s%(levelname)s%(reset)s] %(message)s'
+            ),
+            'datefmt': '%Y/%b/%d %H:%M:%S',
+            'log_colors': {
+                'DEBUG': 'cyan',
+                'INFO': 'green',
+                'WARNING': 'bold_yellow',
+                'ERROR': 'red',
+                'CRITICAL': 'red,bg_white',
+            },
+            'secondary_log_colors': {},
+            'style': '%',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'colored',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+        },
+    },
+    'loggers': {
+        'django': {'handlers': ['console'], 'propagate': True,},
+        'django.request': {'handlers': ['mail_admins'], 'level': 'ERROR',},
+    },
 }
-__app_logging = {'handlers': ['console', ],
-                 'level': 'DEBUG',
-                 'propagate': True}
+__app_logging = {'handlers': ['console',], 'level': 'DEBUG', 'propagate': True}
 for proj_app in START_APPS:
     LOGGING.get('loggers').update({proj_app: __app_logging})
 
 if os.environ.get('ENV') == 'prod':
-    from .production_settings import *
+    from .production_settings import *  # noqa
 elif os.environ.get('ENV') == 'test':
-    from .test_settings import *
+    from .test_settings import *  # noqa
 else:
-    from .development_settings import *
+    from .development_settings import *  # noqa
 
 # Google Cloud Environments
 if os.environ.get('GAE_INSTANCE'):  # Google App Engine cloud deployment
-  from .gae_settings import *
-
-if os.environ.get('GKE'):
-  from .gke_settings import *
+    from .gae_settings import *  # noqa
+elif os.environ.get('GKE'):
+    from .gke_settings import *  # noqa
 
 # DATABASES = {
 #     'default': {

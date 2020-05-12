@@ -64,10 +64,10 @@ class RegistrationTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # A response message of “This field is required” on confirm_password key
         self.assertIn(
-            constants.PASSWORD_CONFIRMATION, response.json()['error']
+            constants.ERROR_PASSWORD_CONFIRMATION, response.json()['error']
         )
 
-    def test_diff_password_confirmation(self):
+    def test_diff_ERROR_PASSWORD_CONFIRMATION(self):
         """
         Check response message when confirmed password is not the same as password in API request
         """
@@ -81,7 +81,7 @@ class RegistrationTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # A response message of “This field is required” on confirm_password key
         self.assertIn(
-            constants.PASSWORD_CONFIRMATION, response.json()['error']
+            constants.ERROR_PASSWORD_CONFIRMATION, response.json()['error']
         )
 
     def test_register(self):

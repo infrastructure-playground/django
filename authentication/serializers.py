@@ -1,4 +1,3 @@
-
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 
@@ -11,6 +10,7 @@ class AccountSerializer(serializers.ModelSerializer):
     """
     @brief      Class for account serializer.
     """
+
     password = serializers.CharField()
     confirm_password = serializers.CharField(required=False)
     # TODO: configure user update especially with the password
@@ -30,17 +30,20 @@ class AccountSerializer(serializers.ModelSerializer):
         @brief      account registration logic.
         """
         confirm_password = validated_data.get('confirm_password')
-        if not confirm_password or validated_data['password'] != confirm_password:
-            raise serializers.ValidationError({'error': constants.PASSWORD_CONFIRMATION})
-        else:
+        if confirm_password and validated_data['password'] == confirm_password:
             del validated_data['confirm_password']
+        else:
+            raise serializers.ValidationError(
+                {'error': constants.ERROR_PASSWORD_CONFIRMATION}
+            )
         account = User.objects.create_user(**validated_data)
         pre_payload = api_settings.JWT_PAYLOAD_HANDLER(account)
         token = api_settings.JWT_ENCODE_HANDLER(pre_payload)
         account.token = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER(token)
         return account
 
-    def delete(self, validated_data):
+    # def delete(self, validated_data):
+    def delete(self):
         """
         @TODO
         @brief

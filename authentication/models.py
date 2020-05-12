@@ -1,16 +1,13 @@
 from __future__ import unicode_literals
 
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+
 # from django.core.urlresolvers import reverse
 from django.db import models
 
 
 class AccountManager(BaseUserManager):
     def create_user(self, password=None, **kwargs):
-        print('===Password===')
-        print(password)
-        print('===Kwargs====')
-        print(kwargs)
         if not kwargs.get('email'):
             raise ValueError('Users must have a valid email address.')
 
@@ -58,7 +55,7 @@ class Account(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.email
 
     def get_full_name(self):
@@ -68,5 +65,5 @@ class Account(AbstractBaseUser):
         return self.first_name
 
     # def get_absolute_url(self):
-        # user_id came from the URL parameter in the urls.py
-        # return reverse('users-detail', kwargs={'user_id': self.id})
+    # user_id came from the URL parameter in the urls.py
+    # return reverse('users-detail', kwargs={'user_id': self.id})
