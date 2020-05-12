@@ -33,7 +33,12 @@ install:
     infrastructureplayground/django:latest
 
 jobs:
+  fast_finish: true
+  allow_failures:
+    - name: Static Code Analysis
   include:
+    - stage: Static Code Analysis
+      script: prospector
     - stage: Authentication Unit Testing
       script: docker exec -it django
               coverage run --source='.'
