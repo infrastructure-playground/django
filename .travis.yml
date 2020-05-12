@@ -37,14 +37,17 @@ jobs:
     - stage: Authentication Unit Testing
       script: docker exec -it django
               coverage run --source='.'
-              manage.py test authentication.tests.test_register &&
-              coverage report
+              manage.py test authentication.tests.test_register
+              &&
+              docker exec -it django coverage report
     - script: docker exec -it django
               coverage run --source='.'
-              manage.py test authentication.tests.test_login &&
-              coverage report
+              manage.py test authentication.tests.test_login
+              &&
+              docker exec -it django coverage report
     - stage: Inventory Unit Testing
       script: docker exec -it django
               coverage run --source='.'
-              manage.py test inventory.tests.BooksTest &&
-              coverage report
+              manage.py test inventory.tests.BooksTest
+              &&
+              docker exec -it django coverage report
