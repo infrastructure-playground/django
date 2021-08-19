@@ -56,7 +56,7 @@ def check_google_recaptcha(token):
     )
     project_id = "resources-practice"
     recaptcha_site_key = "6Ld4Lg0cAAAAAGE1fZWLxmIwucTYfAVLXzV81stl"
-    assessment_name = "login_assessment_2"
+    assessment_name = "login_assessment"
     client = recaptchaenterprise_v1.RecaptchaEnterpriseServiceClient(
         credentials=CREDENTIALS)
     event = recaptchaenterprise_v1.Event()
@@ -73,4 +73,4 @@ def check_google_recaptcha(token):
     request.parent = project_name
 
     response = client.create_assessment(request)
-    response.token_properties.valid
+    return response.token_properties.valid

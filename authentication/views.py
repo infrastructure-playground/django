@@ -41,7 +41,6 @@ class AccountLogin(generics.CreateAPIView):
         :return:  {'token': 'abcdef123456'}
         """
         token = request.data['token']
-        print(f'token: {token}')
         if not check_google_recaptcha(token):
             raise serializers.ValidationError({'error': constants.ERROR_CAPTCHA})
         username = request.data['username']
