@@ -19,3 +19,4 @@ drf-yasg==1.13.0
 google-python-cloud-debugger==2.9  # stackdriver debugger
 coverage==5.1
 prospector==1.2.0
+google-cloud-recaptcha-enterprise==1.0.0
