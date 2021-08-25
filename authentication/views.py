@@ -12,7 +12,7 @@ from .serializers import AccountSerializer
 
 from django.contrib.auth.models import User
 
-from utils.functions import check_google_recaptcha
+# from utils.functions import check_google_recaptcha
 from utils import constants
 
 
@@ -40,13 +40,14 @@ class AccountLogin(generics.CreateAPIView):
                          'token': 'xxxx'}
         :return:  {'token': 'abcdef123456'}
         """
-        token = request.data['token']
-        if not check_google_recaptcha(token, 'LOGIN'):
-            # TODO SAME ACTION CONDITIONAL
-            raise serializers.ValidationError({'error': constants.ERROR_CAPTCHA})
-        username = request.data['username']
-        password = request.data['password']
-        account = authenticate(username=username, password=password)
+        # token = request.data['token']
+        # if not check_google_recaptcha(token, 'LOGIN'):
+        #     # TODO SAME ACTION CONDITIONAL
+        #     raise serializers.ValidationError({'error': constants.ERROR_CAPTCHA})
+        # username = request.data['username']
+        # password = request.data['password']
+        # account = authenticate(username=username, password=password)
+        account = authenticate(**request.data)
         if not account:
             raise serializers.ValidationError({'error': constants.ERROR_AUTH})
         pre_payload = api_settings.JWT_PAYLOAD_HANDLER(account)
