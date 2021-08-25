@@ -46,7 +46,7 @@ def response_with_email(data, status_code, title, email_data, remarks=None):
     return Response(data=data, status=status_code)
 
 
-def check_google_recaptcha(token):
+def check_google_recaptcha(token, assessment):
     """
     :param token: xxxxxxxxxx
     :return: boolean
@@ -55,8 +55,8 @@ def check_google_recaptcha(token):
         f'/usr/src/app/recaptcha.json'
     )
     project_id = "resources-practice"
-    recaptcha_site_key = "6Ld4Lg0cAAAAAGE1fZWLxmIwucTYfAVLXzV81stl"
-    assessment_name = "login_assessment"
+    recaptcha_site_key = "6Ld6zg0cAAAAAE5gKfFd3nk_Y7Q7b8m-VSbuagTX"
+    assessment_name = assessment
     client = recaptchaenterprise_v1.RecaptchaEnterpriseServiceClient(
         credentials=CREDENTIALS)
     event = recaptchaenterprise_v1.Event()
@@ -69,8 +69,10 @@ def check_google_recaptcha(token):
     project_name = f'projects/{project_id}'
 
     request = recaptchaenterprise_v1.CreateAssessmentRequest()
+    print(f"assessment: {assessment}")
     request.assessment = assessment
     request.parent = project_name
 
     response = client.create_assessment(request)
+    print(f"response: {response}")
     return response.token_properties.valid

@@ -20,3 +20,5 @@ google-python-cloud-debugger==2.9  # stackdriver debugger
 coverage==5.1
 prospector==1.2.0
 google-cloud-recaptcha-enterprise==1.0.0
+grpcio==1.39.0
+firebase-admin==5.0.2
