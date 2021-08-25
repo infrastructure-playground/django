@@ -131,10 +131,10 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
-        'utils.authentication.FirebaseAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        # 'utils.authentication.FirebaseAuthentication',
     ),
     'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.JSONRenderer',),
 }
@@ -235,7 +235,7 @@ elif os.environ.get('GKE'):
 
 
 # FireStore Auth
-import firebase_admin
-cred = firebase_admin.credentials.Certificate(os.path.join(BASE_DIR,
-                                            "firebase-admin-key.json"))
-firebase_admin.initialize_app(cred)
+# import firebase_admin
+# cred = firebase_admin.credentials.Certificate(os.path.join(BASE_DIR,
+#                                             "firebase-admin-key.json"))
+# firebase_admin.initialize_app(cred)
